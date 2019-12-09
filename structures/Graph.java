@@ -8,8 +8,17 @@ import java.util.Stack;
 
 public class Graph {
     
+    public class WeightedPair {
+        public int u;
+        public int w;
+        public WeightedPair(int u, int w) {
+            this.u = u;
+            this.w = w;
+        }
+    }
+    
     private int vertices;
-    private List<Integer>[] adjacencyList;
+    private List<WeightedPair>[] adjacencyList;
 
     public Graph(int vertices) {
         this.vertices = vertices;
@@ -20,11 +29,15 @@ public class Graph {
         }
     }
     
-    public void addEdge(int u, int v) {
-        this.adjacencyList[u].add(v);
+    public void addEdge(int v, int u) {
+        this.addEdge(v, u, 1);
     }
     
-    public void addEdgeUndirected(int u, int v) {
+    public void addEdge(int v, int u, int w) {
+        this.adjacencyList[v].add(new WeightedPair(u,w));
+    }
+    
+    public void addEdgeUndirected(int v, int u) {
         addEdge(u, v);
         addEdge(v, u);
     }
@@ -33,7 +46,7 @@ public class Graph {
         return this.vertices;
     }
     
-    public List<Integer> getAdjacent(int vertex) {
+    public List<WeightedPair> getAdjacent(int vertex) {
         return this.adjacencyList[vertex];
     }
     
@@ -59,9 +72,9 @@ public class Graph {
                 result.add(v);
             }
             
-            for (int u : this.adjacencyList[v]) {
-                if (!visited[u]) {
-                    Q.add(u);
+            for (WeightedPair edge : this.adjacencyList[v]) {
+                if (!visited[edge.u]) {
+                    Q.add(edge.u);
                 }
             }
         }
@@ -89,9 +102,9 @@ public class Graph {
                 result.add(v);
             }
             
-            for (int u : this.adjacencyList[v]) {
-                if (!visited[u]) {
-                    S.push(u);
+            for (WeightedPair edge : this.adjacencyList[v]) {
+                if (!visited[edge.u]) {
+                    S.push(edge.u);
                 }
             }
         }
@@ -112,9 +125,9 @@ public class Graph {
     private void topologicalSortHelper(int v, boolean[] visited, LinkedList<Integer> result) {
         visited[v] = true;
         
-        for (int u : this.adjacencyList[v]) {
-            if (!visited[u]) {
-                topologicalSortHelper(u, visited, result);
+        for (WeightedPair edge : this.adjacencyList[v]) {
+            if (!visited[edge.u]) {
+                topologicalSortHelper(edge.u, visited, result);
             }
         }
         
@@ -127,26 +140,21 @@ public class Graph {
     
     
     
-    public void sort() {
-        for (List<Integer> L : this.adjacencyList) {
-            L.sort(null);
-        }
-    }
+//    public void sort() {
+//        for (List<Integer> L : this.adjacencyList) {
+//            L.sort(null);
+//        }
+//    }
     
     public static void printGraph(Graph g) {
         int size = g.getVertexAmount();
         
         for (int v = 0; v < size; v++) {
-            Iterator<Integer> iter = g.getAdjacent(v).iterator();
-            
-            System.out.print(v + " -> ");
-            while (iter.hasNext()) {
-                int u = iter.next();
-                System.out.print(u + ", ");
+            for (WeightedPair edge : g.getAdjacent(v)) {
+                System.out.print(edge.u + ", ");
             }
             System.out.println();
         }
-        
     }
     
 }
