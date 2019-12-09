@@ -1,7 +1,5 @@
 package structures;
 
-
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,10 +29,6 @@ public class Graph {
         addEdge(v, u);
     }
     
-    public void addEdgeUndirectedChar(char u, char v) {
-        addEdgeUndirected(u - 'A', v - 'A');
-    }
-    
     public int getVertexAmount() {
         return this.vertices;
     }
@@ -42,13 +36,20 @@ public class Graph {
     public List<Integer> getAdjacent(int vertex) {
         return this.adjacencyList[vertex];
     }
-        
+    
     public List<Integer> BFS(int s) {
         boolean[] visited = new boolean[this.vertices];
+        List<Integer> result = new LinkedList();
+        
+        for (int v = 0; v < this.vertices; v++) {
+            BFS_helper((v + s) % this.vertices, visited, result);
+        }
+        return result;
+    }
+        
+    public void BFS_helper(int s, boolean[] visited, List<Integer> result) {
         Queue<Integer> Q = new LinkedList();
         Q.add(s);
-        
-        List<Integer> result = new LinkedList();
                 
         while (!Q.isEmpty()) {
             int v = Q.remove();
@@ -64,15 +65,21 @@ public class Graph {
                 }
             }
         }
-        return result;
     }
     
     public List<Integer> DFS(int s) {
         boolean[] visited = new boolean[this.vertices];
+        List<Integer> result = new LinkedList();
+        
+        for (int v = 0; v < this.vertices; v++) {
+            DFS_helper((v + s) % this.vertices, visited, result);
+        }
+        return result;
+    }
+    
+    private void DFS_helper(int s, boolean[] visited, List<Integer> result) {
         Stack<Integer> S = new Stack();
         S.push(s);
-        
-        List<Integer> result = new LinkedList();
                 
         while (!S.isEmpty()) {
             int v = S.pop();
@@ -88,7 +95,30 @@ public class Graph {
                 }
             }
         }
+    }
+    
+    public List<Integer> topologicalSort() {
+        boolean[] visited = new boolean [this.vertices];
+        LinkedList<Integer> result = new LinkedList();
+        
+        for (int v = 0; v < this.vertices; v++) {
+            if (!visited[v]) {
+                topologicalSortHelper(v, visited, result);
+            }
+        }
         return result;
+    }
+    
+    private void topologicalSortHelper(int v, boolean[] visited, LinkedList<Integer> result) {
+        visited[v] = true;
+        
+        for (int u : this.adjacencyList[v]) {
+            if (!visited[u]) {
+                topologicalSortHelper(u, visited, result);
+            }
+        }
+        
+        result.addFirst(v);
     }
     
     
@@ -98,7 +128,7 @@ public class Graph {
     
     
     public void sort() {
-        for (List<Integer> L: this.adjacencyList) {
+        for (List<Integer> L : this.adjacencyList) {
             L.sort(null);
         }
     }
