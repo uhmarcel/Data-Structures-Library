@@ -292,6 +292,30 @@ public class Graph {
         return new int[][] {dist, prev};  
     }
     
+    public int[][] directedAcyclicSPD(int s) {
+        int[] dist = new int[vertices];
+        int[] prev = new int[vertices];
+        
+        for (int v = 0; v < vertices; v++) {
+            dist[v] = Integer.MAX_VALUE;
+            prev[v] = -1;
+        }
+        dist[s] = 0;
+        
+        List<Integer> sortedVertices = this.topologicalSort();
+        
+        for (int v : sortedVertices) {
+            for (Node e : adjacencyList[v]) {
+                if (dist[e.u] > dist[v] + e.w) {
+                    dist[e.u] = dist[v] + e.w;
+                    prev[e.u] = v;
+                }
+            }
+        }
+        
+        return new int[][] {dist, prev};
+    }
+    
     
     ////// Testbench //////
     
