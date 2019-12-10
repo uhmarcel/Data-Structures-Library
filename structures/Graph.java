@@ -1,5 +1,6 @@
 package structures;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.TreeMap;
 
 public class Graph {
     
@@ -27,7 +29,7 @@ public class Graph {
         
         @Override
         public String toString() {
-            return Integer.toString(u) + "-" + w;
+            return Integer.toString(u) + "/" + w;
         }
     }
         
@@ -57,6 +59,11 @@ public class Graph {
     public void addEdgeUndirected(int v, int u) {
         addEdge(u, v);
         addEdge(v, u);
+    }
+    
+    public void addEdgeUndirected(int v, int u, int w) {
+        addEdge(u, v, w);
+        addEdge(v, u, w);
     }
     
     public int getVertexAmount() {
@@ -152,20 +159,76 @@ public class Graph {
     }
     
     
-    // Incomplete
-    public Graph MST() {                
-        PriorityQueue<Node> Q = new PriorityQueue();
+    // Doesn't work - Requires map utils
+    public Graph KruskarMST() {
         
-        for (int v = 0; v < this.vertices; v++) {
-            for (Node e : this.adjacencyList[v]) {
-                Q.add(e);
+        class Edge implements Comparable<Edge> {
+            public int v, u, w;
+            public Edge(int _v, int _u, int _w) { v = _v; u = _u; w = _w; }
+            public int compareTo(Edge e) { return this.w - e.w; }
+        }
+        
+        PriorityQueue<Edge> H = new PriorityQueue();
+        
+        for (int v = 0; v < vertices; v++) {
+            for (Node n : this.adjacencyList[v]) {
+                H.add(new Edge(v, n.u, n.w));
             }
         }
         
-        while (!Q.isEmpty()) {
-            System.out.println(Q.remove());
+        System.out.println(H);
+        
+        Graph G = new Graph(vertices);
+        
+        while (!H.isEmpty()) {
+            Edge e = H.remove();
+            if (G.getAdjacent(e.u).isEmpty()) {
+                G.addEdge(e.v, e.u, e.w);
+            }
         }
+        
+        printGraph(G);
         return null;
+    }
+    
+    // Works, but sketchy implementation.
+    public int[] PrimMST() {     
+        int[] prev = new int[vertices];
+        boolean[] found = new boolean[vertices]; 
+        Node[] nodes = new Node[vertices];
+        
+        for (int v = 0; v < vertices; v++) {
+            nodes[v] = new Node(v, Integer.MAX_VALUE);
+        }
+        nodes[0].w = 0;
+        
+        PriorityQueue<Node> H = new PriorityQueue();
+        for (int v = 0; v < vertices; v++) {
+            H.add(new Node(nodes[v].u, nodes[v].w));
+        }
+        
+        for (int i = 0; i < vertices; i++) {
+            if (H.isEmpty()) {
+                break;
+            }
+            
+            Node v = H.remove();
+            while (found[v.u]) {
+                v = H.remove();
+            } 
+            found[v.u] = true;
+            
+            for (Node e : adjacencyList[v.u]) {
+                if (!found[e.u]) {
+                    if (nodes[e.u].w > e.w) {
+                        nodes[e.u].w = e.w;
+                        prev[e.u] = v.u;
+                        H.add(new Node(nodes[e.u].u, nodes[e.u].w));    
+                    }
+                }
+            }
+        }
+        return prev;  
     }
     
     public int[][] BellmanFordSPD(int s) {
@@ -179,7 +242,7 @@ public class Graph {
     
         dist[s] = 0;
         
-        for (int v = 0; v < vertices - 1; v++) {
+        for (int v = 0; v < vertices; v++) {
             for (Node e : adjacencyList[v]) {
                 if (dist[e.u] > dist[v] + e.w) {
                     dist[e.u] = dist[v] + e.w;
