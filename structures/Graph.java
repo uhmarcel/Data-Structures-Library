@@ -162,32 +162,32 @@ public class Graph {
     // Doesn't work - Requires map utils
     public Graph KruskarMST() {
         
-        class Edge implements Comparable<Edge> {
-            public int v, u, w;
-            public Edge(int _v, int _u, int _w) { v = _v; u = _u; w = _w; }
-            public int compareTo(Edge e) { return this.w - e.w; }
-        }
-        
-        PriorityQueue<Edge> H = new PriorityQueue();
-        
-        for (int v = 0; v < vertices; v++) {
-            for (Node n : this.adjacencyList[v]) {
-                H.add(new Edge(v, n.u, n.w));
-            }
-        }
-        
-        System.out.println(H);
-        
-        Graph G = new Graph(vertices);
-        
-        while (!H.isEmpty()) {
-            Edge e = H.remove();
-            if (G.getAdjacent(e.u).isEmpty()) {
-                G.addEdge(e.v, e.u, e.w);
-            }
-        }
-        
-        printGraph(G);
+//        class Edge implements Comparable<Edge> {
+//            public int v, u, w;
+//            public Edge(int _v, int _u, int _w) { v = _v; u = _u; w = _w; }
+//            public int compareTo(Edge e) { return this.w - e.w; }
+//        }
+//        
+//        PriorityQueue<Edge> H = new PriorityQueue();
+//        
+//        for (int v = 0; v < vertices; v++) {
+//            for (Edge n : this.adjacencyList[v]) {
+//                H.add(new Edge(v, n.u, n.w));
+//            }
+//        }
+//        
+//        System.out.println(H);
+//        
+//        Graph G = new Graph(vertices);
+//        
+//        while (!H.isEmpty()) {
+//            Edge e = H.remove();
+//            if (G.getAdjacent(e.u).isEmpty()) {
+//                G.addEdge(e.v, e.u, e.w);
+//            }
+//        }
+//        
+//        printGraph(G);
         return null;
     }
     
@@ -241,19 +241,56 @@ public class Graph {
         }
     
         dist[s] = 0;
+        for (int i = 0; i < vertices - 1; i++) {
+            for (int v = 0; v < vertices; v++) {
+                for (Node e : adjacencyList[v]) {
+                    if (dist[e.u] > dist[v] + e.w) {
+                        dist[e.u] = dist[v] + e.w;
+                        prev[e.u] = v;
+                    }
+                }
+            }
+        }
+        return new int[][] {dist, prev};
+    }
+    
+    public int[][] DijkstraSPD(int s) {
+        int[] dist = new int[vertices];
+        int[] prev = new int[vertices];
+        boolean[] done  = new boolean[vertices];
         
         for (int v = 0; v < vertices; v++) {
-            for (Node e : adjacencyList[v]) {
-                if (dist[e.u] > dist[v] + e.w) {
-                    dist[e.u] = dist[v] + e.w;
-                    prev[e.u] = v;
+            dist[v] = Integer.MAX_VALUE;
+            prev[v] = -1;
+            done[v] = false;
+        }
+        
+        dist[s] = 0;
+        
+        PriorityQueue<Node> H = new PriorityQueue();
+        for (int v = 0; v < vertices; v++) {
+            H.add(new Node(v, dist[v]));
+        }
+        
+        for (int i = 0; i < vertices; i++) {
+            Node V = H.remove();
+            while (done[V.u]) {
+                V = H.remove();
+            }
+            
+            for (Node E : adjacencyList[V.u]) {
+                if (!done[E.u]) {
+                    if (dist[E.u] > dist[V.u] + E.w) {
+                        dist[E.u] = dist[V.u] + E.w;
+                        prev[E.u] = V.u;
+                        H.add(new Node(E.u, dist[E.u]));
+                    }
                 }
             }
         }
         
-        return new int[][] {dist, prev};
+        return new int[][] {dist, prev};  
     }
-    
     
     
     ////// Testbench //////

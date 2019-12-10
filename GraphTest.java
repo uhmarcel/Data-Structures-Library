@@ -33,20 +33,28 @@ public class GraphTest {
 //        g.addEdge(3, 1, 1);
 //        g.addEdge(4, 3, -3);
         
-        Graph.printGraph(g);
+//        Graph.printGraph(g);
+
+        int startNode = 0;
+        int[][] shortestPath;
         
-        int s = 0;
-        System.out.println("BFS: " + g.BFS(s));
-        System.out.println("DFS: " + g.DFS(s));
+        System.out.println("BFS: " + g.BFS(startNode));
+        System.out.println("DFS: " + g.DFS(startNode));
         System.out.println("Topological: " + g.topologicalSort());
-        
-        int[][] sp = g.BellmanFordSPD(s);
-        System.out.println("Bellman-Ford Shortest Path:");
-        System.out.println("  Dist[v] ->" + Arrays.toString(sp[Graph.DISTANCE_INDEX]));
-        System.out.println("  Prev[v] ->" + Arrays.toString(sp[Graph.PREVIOUS_INDEX]));
         
 //        g.KruskarMST();
         System.out.println("PrimMST: " + Arrays.toString(g.PrimMST()));
+        
+        shortestPath = g.BellmanFordSPD(startNode);
+        System.out.println("Bellman-Ford Shortest Path:");
+        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[Graph.DISTANCE_INDEX]));
+        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[Graph.PREVIOUS_INDEX]));
+        
+        shortestPath = g.DijkstraSPD(startNode);
+        System.out.println("Dijkstra Shortest Path:");
+        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[Graph.DISTANCE_INDEX]));
+        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[Graph.PREVIOUS_INDEX]));
+        
         
 //        g.MST();
         
