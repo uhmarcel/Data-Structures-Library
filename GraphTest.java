@@ -1,12 +1,12 @@
 
 import java.util.Arrays;
-import structures.Graph;
+import structures.GraphPlain;
 
 
 public class GraphTest {
     
     public static void main(String[] args) {
-        Graph g = new Graph(6);
+        GraphPlain g = new GraphPlain(6);
         g.addEdge(0, 1, 5); 
         g.addEdge(0, 2, 3); 
         g.addEdge(1, 3, 6); 
@@ -57,18 +57,18 @@ public class GraphTest {
         
         shortestPath = g.BellmanFordSPD(startNode);
         System.out.println("Bellman-Ford Shortest Path:");
-        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[Graph.DISTANCE_INDEX]));
-        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[Graph.PREVIOUS_INDEX]));
+        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[GraphPlain.DISTANCE_INDEX]));
+        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[GraphPlain.PREVIOUS_INDEX]));
         
         shortestPath = g.DijkstraSPD(startNode);
         System.out.println("Dijkstra Shortest Path:");
-        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[Graph.DISTANCE_INDEX]));
-        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[Graph.PREVIOUS_INDEX]));
+        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[GraphPlain.DISTANCE_INDEX]));
+        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[GraphPlain.PREVIOUS_INDEX]));
         
         shortestPath = g.directedAcyclicSPD(startNode);
         System.out.println("DAG Shortest Path:");
-        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[Graph.DISTANCE_INDEX]));
-        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[Graph.PREVIOUS_INDEX]));
+        System.out.println("  Dist[v] ->" + Arrays.toString(shortestPath[GraphPlain.DISTANCE_INDEX]));
+        System.out.println("  Prev[v] ->" + Arrays.toString(shortestPath[GraphPlain.PREVIOUS_INDEX]));
         
         
 //        g.MST();
