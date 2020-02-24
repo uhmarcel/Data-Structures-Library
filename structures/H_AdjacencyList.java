@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UndirectedAdjacencyList<Any> implements Graph<Any> {
+public class H_AdjacencyList<Any> implements H_Graph<Any> {
     
     final private Map<Any, List<Any>> adjacencyList;
     final private Map<Any, Map<Any, Integer>> weightMap;
     
-    public UndirectedAdjacencyList() {
+    public H_AdjacencyList() {
         this.adjacencyList = new HashMap<>();
         this.weightMap = new HashMap<>();
     }
@@ -50,11 +50,8 @@ public class UndirectedAdjacencyList<Any> implements Graph<Any> {
     @Override
     public void addEdge(Any v, Any u, int w) {
         if (!adjacencyList.containsKey(v)) addVertex(v);
-        if (!adjacencyList.containsKey(u)) addVertex(u);
         adjacencyList.get(v).add(u);
-        adjacencyList.get(u).add(v);
         weightMap.get(v).put(u, w);
-        weightMap.get(u).put(v, w);
     }
 
     @Override

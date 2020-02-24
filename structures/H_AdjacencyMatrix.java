@@ -2,7 +2,7 @@ package structures;
 
 import java.util.Collection;
 
-public class AdjacencyMatrix<Any> implements Graph<Any> {
+public class H_AdjacencyMatrix<Any> implements H_Graph<Any> {
     
     @Override
     public int sizeVertex() {

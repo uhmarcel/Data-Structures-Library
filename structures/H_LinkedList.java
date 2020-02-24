@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class H_LinkedList<E> implements H_List<E> {
+public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E> {
     
     private ListNode<E> head;
     private ListNode<E> tail;
@@ -110,6 +110,28 @@ public class H_LinkedList<E> implements H_List<E> {
             curr = curr.next;
         }
         return -1;
+    }
+    
+    public boolean offer(E elem) {
+        return add(elem);
+    }
+
+    public E poll() {
+        E elem = get(0);
+        removeFirst();
+        return elem;
+    }
+
+    public E peek() {
+        return get(0);
+    }
+    
+    public boolean push(E elem) {
+        return addFirst(elem);
+    }
+
+    public E pop() {
+        return poll();
     }
 
     public Object[] toArray() {
@@ -218,5 +240,15 @@ public class H_LinkedList<E> implements H_List<E> {
         list.remove(7);
         System.out.println(list);
         System.out.println(list.contains(7));
+        
+        H_Queue<Integer> queue = new H_LinkedList<>();
+        for (int i = 10; i >= 0; i--) {
+            queue.offer(i);
+        }
+        System.out.println(queue.peek());
+        while (!queue.isEmpty()) {
+            System.out.println(queue.poll());
+        }
+        
     }
 }

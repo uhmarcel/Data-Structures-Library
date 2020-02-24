@@ -2,18 +2,18 @@ package structures;
 import java.lang.reflect.Array;
 import java.util.*;
 
-public class Heap<E extends Comparable<E>> extends AbstractQueue<E> {
+public class H_Heap<E extends Comparable<E>> extends AbstractQueue<E> {
     
     private static final int DEFAULT_SIZE = 4;
     
     private Object[] heap;
     private int size;
     
-    public Heap() {
+    public H_Heap() {
         this(DEFAULT_SIZE);
     }
     
-    public Heap(int capacity) {
+    public H_Heap(int capacity) {
         this.heap = new Object[capacity];
         this.size = 0;
     }
@@ -117,10 +117,13 @@ public class Heap<E extends Comparable<E>> extends AbstractQueue<E> {
         return Arrays.toString(heap);
     }
     
+    
+    //////////////////////////////////////////////
+    // --------------- TEST ------------------- //
     //////////////////////////////////////////////
     
     public static void main(String[] mains) {
-        Heap<Integer> H = new Heap<>();
+        H_Heap<Integer> H = new H_Heap<>();
         Random r = new Random();
         for (int i = 0; i < 30; i++) {
             H.add(r.nextInt(10000));

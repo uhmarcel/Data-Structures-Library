@@ -1,12 +1,7 @@
 
 package structures;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-public class H_ArrayList<E> implements List<E> {
+public class H_ArrayList<E> implements H_List<E> {
     
     private static final int DEFAULT_SIZE = 4;
     private Object[] array;
@@ -47,33 +42,6 @@ public class H_ArrayList<E> implements List<E> {
             return false;
         this.remove(i);
         return true;
-    }
-
-    public boolean containsAll(Collection<?> clctn) {
-        for (Object obj : clctn) {
-            if (!this.contains(obj))
-                return false;
-        }
-        return true;
-    }
-
-    public boolean addAll(Collection<? extends E> clctn) {
-        for (E e : clctn) {
-            if (!this.add(e))
-                return false;
-        }
-        return true;
-    }
-
-    public boolean removeAll(Collection<?> clctn) {
-        for (Object obj : clctn) {
-            this.remove((E) obj);
-        }
-        return true;
-    }
-
-    public boolean retainAll(Collection<?> clctn) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void clear() {
@@ -166,42 +134,13 @@ public class H_ArrayList<E> implements List<E> {
         }
         this.array = halfArray;
     }
-    @Override
-    public Iterator<E> iterator() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    @Override
-    public boolean addAll(int i, Collection<? extends E> clctn) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    @Override
-    public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ListIterator<E> listIterator() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ListIterator<E> listIterator(int i) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<E> subList(int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
     //////////////////////////////////////////////
     // --------------- TEST ------------------- //
     //////////////////////////////////////////////
     
     public static void main(String[] args) {
-        List<Integer> list = new H_ArrayList<>();
+        H_List<Integer> list = new H_ArrayList<>();
         
         for (int i = 0; i < 10; i++) {
             list.add(i);

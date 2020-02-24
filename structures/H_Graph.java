@@ -1,7 +1,7 @@
 package structures;
 import java.util.Collection;
 
-public interface Graph<Any> {
+public interface H_Graph<Any> {
    
     public int sizeVertex();
     public int sizeEdges();

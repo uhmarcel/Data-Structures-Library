@@ -2,6 +2,6 @@
 package structures;
 
 
-public class Tree {
+public class H_Tree {
 
 }
