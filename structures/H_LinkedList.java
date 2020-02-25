@@ -1,12 +1,7 @@
 
 package structures;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E> {
+public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deque<E> {
     
     private ListNode<E> head;
     private ListNode<E> tail;
@@ -47,20 +42,20 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E> {
         return this.addLast(e);
     }
     
-    public boolean removeFirst() {
-        if (size == 0) return false;
-        head = head.next;
-        head.prev = null;
+    public E removeFirst() {
+        if (size == 0) return null;
+        E removed = head.next.value;
+        linkNodes(head, head.next.next);
         size--;
-        return true;
+        return removed;
     }
     
-    public boolean removeLast() {
-        if (size == 0) return false;
-        tail = tail.prev;
-        tail.next = null;
+    public E removeLast() {
+        if (size == 0) return null;
+        E removed = tail.prev.value;
+        linkNodes(tail.prev.prev, tail);
         size--;
-        return true;
+        return removed;
     }
     
     public void clear() {
@@ -115,15 +110,37 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E> {
     public boolean offer(E elem) {
         return add(elem);
     }
+    
+    public boolean offerFirst(E elem) {
+        return addFirst(elem);
+    }
+    
+    public boolean offerLast(E elem) {
+        return addLast(elem);
+    }
 
     public E poll() {
-        E elem = get(0);
-        removeFirst();
-        return elem;
+        return removeFirst();
+    }
+    
+    public E pollFirst() {
+        return removeFirst();
+    }
+    
+    public E pollLast() {
+        return removeLast();
     }
 
     public E peek() {
         return get(0);
+    }
+    
+    public E peekFirst() {
+        return get(0);
+    }
+    
+    public E peekLast() {
+        return get(size - 1);
     }
     
     public boolean push(E elem) {
