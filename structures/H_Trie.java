@@ -1,24 +1,23 @@
 
 package structures;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class H_Trie<E> {
     
-    private final Map<E, H_Trie> children;
+    private final H_Map<E, H_Trie> children;
     private boolean isEnd;
     
     public H_Trie() {
-        this.children = new HashMap<>();
+        this.children = new H_HashMap<>();
         this.isEnd = false;
     }
     
     public void insert(E[] array) {
         H_Trie<E> t = this;
         for (E current : array) {
-            t = t.children.computeIfAbsent(current, k -> new H_Trie<>());
+            if (!t.children.containsKey(current))
+                t.children.put(current, new H_Trie<>());
+            t = t.children.get(current);
         }
         t.isEnd = true;
     }
@@ -57,7 +56,7 @@ public class H_Trie<E> {
         return t.isEnd;
     }
     
-    public Set<E> childSet() {
+    public H_Set<E> childSet() {
         return this.children.keySet();
     }
     
