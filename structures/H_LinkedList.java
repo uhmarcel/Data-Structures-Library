@@ -230,7 +230,7 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
     }
 
     public Iterator<E> iterator() {
-        return new LinkedListIterator<>();
+        return new LinkedListIterator();
     }
 
     class ListNode<E> {
@@ -249,24 +249,27 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         }
     }
     
-    class LinkedListIterator<E> implements Iterator<E> {
-        private ListNode node;
+    class LinkedListIterator implements Iterator<E> {
+        private ListNode<E> node;
         
         public LinkedListIterator() {
-            this.node = head;
+            this.node = head.next;
         }
         
         public boolean hasNext() {
-            return node != tail.prev;
+            return node != tail;
         }
 
         public E next() {
+            E element = (E) node.value;
             node = node.next;
-            return (E) node.value;
+            return element;
         }
 
         public void remove() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if (node.prev.prev == null) return;
+            linkNodes(node.prev.prev, node);
+            size--;
         }
         
     }

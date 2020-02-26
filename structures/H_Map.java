@@ -4,9 +4,9 @@ package structures;
 
 public interface H_Map<K,V> {
     
-    public V get(K key);
+    public V get(Object key);
     public V put(K key, V value);
-    public V remove(K key);
+    public V remove(Object key);
     public boolean containsKey(K key);
     public H_Set<K> keySet();
     public H_Collection<V> values();

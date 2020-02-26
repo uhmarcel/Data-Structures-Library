@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 public class H_BinaryIndexedTree<E> {
     
     private final BiFunction<E,E,E> function;
-    private final BiFunction<E,E,E> reverse;
+    private final BiFunction<E,E,E> inverse;
     private final E[] values;
     private final E[] tree;
     private final E zeroValue;
@@ -21,7 +21,7 @@ public class H_BinaryIndexedTree<E> {
         this.tree = (E[]) new Object[array.length + 1];
         this.values = (E[]) new Object[array.length];
         this.function = f;
-        this.reverse = r;
+        this.inverse = r;
         this.zeroValue = zeroValue;
         
         if (zeroValue != null) {
@@ -38,7 +38,7 @@ public class H_BinaryIndexedTree<E> {
     }
     
     public E update(int index, E elem) {
-        E delta = reverse.apply(elem, values[index]);
+        E delta = inverse.apply(elem, values[index]);
         for (int i = index + 1; i < tree.length; i += i & -i) {
             tree[i] = function.apply(tree[i], delta);
         }
@@ -49,7 +49,7 @@ public class H_BinaryIndexedTree<E> {
     
    
     public E getRange(int i, int j) {
-        return reverse.apply(accumulate(j), accumulate(i - 1));
+        return inverse.apply(accumulate(j), accumulate(i - 1));
     }
     
     private E accumulate(int index) {

@@ -17,7 +17,8 @@ public class H_HashMap<K,V> implements H_Map<K,V> {
     }
 
     @Override
-    public V get(K key) {
+    public V get(Object o) {
+        K key = (K) o;
         int index = key.hashCode() % map.length;
         return findValue(index, key);
     }
@@ -33,7 +34,8 @@ public class H_HashMap<K,V> implements H_Map<K,V> {
     }
     
     @Override
-    public V remove(K key) {
+    public V remove(Object o) {
+        K key = (K) o;
         int index = key.hashCode() % map.length;
         V removed = findValue(index, key);
         if (removed != null) {
