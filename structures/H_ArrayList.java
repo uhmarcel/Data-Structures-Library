@@ -1,6 +1,8 @@
 
 package structures;
 
+import java.util.Iterator;
+
 public class H_ArrayList<E> implements H_List<E> {
     
     private static final int DEFAULT_SIZE = 4;
@@ -85,6 +87,10 @@ public class H_ArrayList<E> implements H_List<E> {
         }
         return -1;
     }
+    
+    public Iterator<E> iterator() {
+        return new ArrayListIterator<>();
+    }
 
     public Object[] toArray() {
         Object[] clone = new Object[size];
@@ -135,6 +141,22 @@ public class H_ArrayList<E> implements H_List<E> {
         this.array = halfArray;
     }
     
+    class ArrayListIterator<E> implements Iterator<E> {
+        private int pointer;
+        
+        public ArrayListIterator() {
+            this.pointer = 0;
+        }
+        
+        public boolean hasNext() {
+            return pointer < size;
+        }
+
+        public E next() {
+            return (E) array[pointer++];
+        }
+    }
+    
     //////////////////////////////////////////////
     // --------------- TEST ------------------- //
     //////////////////////////////////////////////
@@ -148,5 +170,11 @@ public class H_ArrayList<E> implements H_List<E> {
         
         System.out.println(list);
         System.out.println(list.contains(3));
+        
+        int sum = 0;
+        for (int elem : list)
+            sum += elem;
+        System.out.println(sum);
     }
+
 }

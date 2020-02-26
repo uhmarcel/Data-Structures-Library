@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class H_Trie<E> {
     
-    private Map<E, H_Trie> children;
+    private final Map<E, H_Trie> children;
     private boolean isEnd;
     
     public H_Trie() {
@@ -105,11 +105,9 @@ public class H_Trie<E> {
         }
     }
     
-    
     //////////////////////////////////////////////
     // --------------- TEST ------------------- //
     //////////////////////////////////////////////
-    
     
     public static void main(String[] mains) {
         H_Trie<Character> t = new H_Trie<>();

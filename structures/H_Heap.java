@@ -1,8 +1,9 @@
 package structures;
-import java.lang.reflect.Array;
-import java.util.*;
 
-public class H_Heap<E extends Comparable<E>> extends AbstractQueue<E> {
+import java.util.Arrays;
+import java.util.Random;
+
+public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
     
     private static final int DEFAULT_SIZE = 4;
     
@@ -53,11 +54,6 @@ public class H_Heap<E extends Comparable<E>> extends AbstractQueue<E> {
     
     public boolean isEmpty() {
         return (this.size == 0);
-    }
-    
-    @Override
-    public Iterator<E> iterator() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private void percolateUp(int index) {
@@ -116,7 +112,6 @@ public class H_Heap<E extends Comparable<E>> extends AbstractQueue<E> {
     public String toString() {
         return Arrays.toString(heap);
     }
-    
     
     //////////////////////////////////////////////
     // --------------- TEST ------------------- //

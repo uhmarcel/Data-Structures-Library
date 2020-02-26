@@ -1,6 +1,8 @@
 
 package structures;
 
+import java.util.Iterator;
+
 public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deque<E> {
     
     private ListNode<E> head;
@@ -227,6 +229,10 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         return curr;
     }
 
+    public Iterator<E> iterator() {
+        return new LinkedListIterator<>();
+    }
+
     class ListNode<E> {
         public ListNode<E> next;
         public ListNode<E> prev;
@@ -241,6 +247,28 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
             this.next = null;
             this.prev = null;
         }
+    }
+    
+    class LinkedListIterator<E> implements Iterator<E> {
+        private ListNode node;
+        
+        public LinkedListIterator() {
+            this.node = head;
+        }
+        
+        public boolean hasNext() {
+            return node != tail.prev;
+        }
+
+        public E next() {
+            node = node.next;
+            return (E) node.value;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        
     }
     
     //////////////////////////////////////////////
@@ -266,6 +294,9 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         while (!queue.isEmpty()) {
             System.out.println(queue.poll());
         }
+        
+        for (int elem : list) 
+            System.out.print(elem + " ");
         
     }
 }
