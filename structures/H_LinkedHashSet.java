@@ -6,54 +6,48 @@ import java.util.Iterator;
 
 public class H_LinkedHashSet<E> implements H_Set<E> {
 
-    private H_Map<E, ListNode> map; 
-    private ListNode head;
-    private ListNode tail;
+    private H_Map<E, H_LinkedList<E>.ListNode> map; 
+    private H_LinkedList<E> list;
     
     public H_LinkedHashSet() {
         this.map = new H_HashMap<>();
-        this.head = new ListNode(null);
-        this.tail = new ListNode(null);
-        link(head, tail);
+        this.list = new H_LinkedList<>();
     }
     
+    @Override
     public boolean add(E e) {
         if (map.containsKey(e)) return false;
-        ListNode node = new ListNode(e);
-        link(tail.prev, node);
-        link(node, tail);
-        map.put(e, node);
+        list.add(e);
+        map.put(e, list.getNode(list.size() - 1));
         return true;
     }
 
     @Override
     public boolean remove(Object o) {
-        ListNode node = map.remove(o);
-        if (node == null) return false;
-        unlink(node);
+        if (!map.containsKey(o)) return false;
+        map.remove(o).remove();
         return true;
     }
 
     @Override
     public boolean contains(Object o) {
-        return map.containsKey((E) o);
+        return map.containsKey(o);
     }
 
     @Override
     public int size() {
-        return map.size();
+        return list.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return map.size() == 0;
+        return list.size() == 0;
     }
 
     @Override
     public void clear() {
         this.map = new H_HashMap<>();
-        this.head = new ListNode(null);
-        this.tail = this.head;
+        this.list = new H_LinkedList<>();
     }
 
     @Override
@@ -62,55 +56,23 @@ public class H_LinkedHashSet<E> implements H_Set<E> {
     }
     
     public String toString() {
-        H_List<E> list = new H_ArrayList<>();
-        for (E element : this) {
-            list.add(element);
-        }
         return list.toString();
     }
     
-    private void link(ListNode v, ListNode u) {
-        v.next = u;
-        u.prev = v;
-    }
-    
-    private void unlink(ListNode v) {
-        if (v.prev != null) v.prev.next = v.next;
-        if (v.next != null) v.next.prev = v.prev;
-    }
-    
-    private class ListNode {
-        public E value;
-        public ListNode prev;
-        public ListNode next;
-    
-        public ListNode(E value) {
-            this.value = value;
-        }
-        
-        public int hashCode() {
-            return value.hashCode();
-        } 
-        
-        public boolean equals(Object o) {
-            ListNode node = (ListNode) o;
-            return value.equals(node.value);
-        }
-    }
-    
+    // Added independent class instead of returning LinkedListIterator to avoid 
+    // direct use of Iterator.remove, which would make the map invalid.
     private class LinkedHashSetIterator implements Iterator<E> {
-        private ListNode pointer;
+        private Iterator<E> iterator; 
         
         public LinkedHashSetIterator() {
-            this.pointer = head;
+            this.iterator = list.iterator();
         }
         public boolean hasNext() {
-            return pointer.next != tail;
+            return iterator.hasNext();
         }
 
         public E next() {
-            pointer = pointer.next;
-            return pointer.value;
+            return iterator.next();
         }
     }
             
@@ -119,17 +81,18 @@ public class H_LinkedHashSet<E> implements H_Set<E> {
     //////////////////////////////////////////////
     
     public static void main(String[] mains) {
-        H_Set<Character> set = new H_LinkedHashSet<>();
+        H_Set<Character> linkedSet = new H_LinkedHashSet<>();
+        H_Set<Character> set = new H_HashSet<>();
+        
         for (char c : "helloworld".toCharArray()) {
+            linkedSet.add(c);
             set.add(c);
         }
+        
+        System.out.println(linkedSet);
         System.out.println(set);
-        
-        for (char elem : set) 
-            System.out.print(elem + " ");
-        
-        System.out.println(set.contains('o'));
-        System.out.println(set.contains('f'));
+        System.out.println(linkedSet.contains('o'));
+        System.out.println(linkedSet.contains('f'));
         
     }
 

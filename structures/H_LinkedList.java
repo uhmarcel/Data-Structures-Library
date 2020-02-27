@@ -5,102 +5,112 @@ import java.util.Iterator;
 
 public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deque<E> {
     
-    private ListNode<E> head;
-    private ListNode<E> tail;
+    private ListNode head;
+    private ListNode tail;
     private int size;
 
     public H_LinkedList() {
-        this.head = new ListNode<>();
-        this.tail = new ListNode<>();
+        this.head = new ListNode(null);
+        this.tail = new ListNode(null);
         this.size = 0;
-        linkNodes(head, tail);
+        head.next = tail;
+        tail.prev = head;
     }
 
+    @Override
     public int size() {
         return this.size;
     }
 
+    @Override
     public boolean isEmpty() {
         return this.size == 0;
     }
 
+    @Override
     public boolean contains(Object o) {
         return indexOf(o) != -1;
     }
     
     public boolean addFirst(E e) {
-        insertAfter(head, e);
-        size++;
+        head.insertAfter(e);
         return true;
     }
     
     public boolean addLast(E e) {
-        insertBefore(tail, e);
-        size++;
+        tail.insertBefore(e);
         return true;
-    }
-
-    public boolean add(E e) {
-        return this.addLast(e);
     }
     
     public E removeFirst() {
         if (size == 0) return null;
-        E removed = head.next.value;
-        linkNodes(head, head.next.next);
-        size--;
-        return removed;
+        return head.next.remove();
     }
     
     public E removeLast() {
         if (size == 0) return null;
-        E removed = tail.prev.value;
-        linkNodes(tail.prev.prev, tail);
-        size--;
-        return removed;
+        return tail.prev.remove();
     }
     
-    public void clear() {
-        this.head = new ListNode<>();
-        this.tail = new ListNode<>();
-        this.size = 0;
-        linkNodes(head, tail);
-    }
-
-    public E get(int i) {
-        return getNode(i).value;
-    }
-
-    public E set(int i, E e) {
-        ListNode<E> node = getNode(i);
-        E oldVal = node.value;
-        node.value = e;
-        return oldVal;
-    }
-
-    public void add(int i, E e) {
-        ListNode curr = getNode(i).prev;
-        insertAfter(curr, e);
-        size++;
-    }
-
-    public E remove(int i) {
-        ListNode<E> curr = getNode(i).prev;
-        E removed = curr.next.value;
-        linkNodes(curr, curr.next.next);
-        size--;
-        return removed;
+    public E getFirst() {
+        if (size == 0) return null;
+        return head.next.value;
     }
     
+    public E getLast() {
+        if (size == 0) return null;
+        return tail.prev.value;
+    }
+
+    @Override
+    public boolean add(E e) {
+        return addLast(e);
+    }
+    
+    @Override
     public boolean remove(Object o) {
         int i = indexOf(o);
         if (i == -1) return false;
         remove(i);
         return true;
     }
+    
+    @Override
+    public void add(int i, E e) {
+        if (i < 0 || i >= size) return;
+        getNode(i).insertBefore(e);
+    }
 
+    @Override
+    public E remove(int i) {
+        if (i < 0 || i >= size) return null;
+        return getNode(i).remove();
+    }
+    
+    @Override
+    public E get(int i) {
+        if (i < 0 || i >= size) return null;
+        return getNode(i).value;
+    }
+
+    @Override
+    public E set(int i, E e) {
+        if (i < 0 || i >= size) return null;
+        return getNode(i).set(e);
+    }
+    
+    @Override
+    public void clear() {
+        this.head = new ListNode(null);
+        this.tail = new ListNode(null);
+        this.size = 0;
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    @Override
     public int indexOf(Object o) {
-        ListNode<E> curr = head.next;
+        ListNode curr = head.next;
         for (int i = 0; i < size; i++) {
             if (curr.value.equals(o))
                 return i;
@@ -109,77 +119,84 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         return -1;
     }
     
+    @Override
     public boolean offer(E elem) {
-        return add(elem);
+        return addLast(elem);
     }
     
+    @Override
     public boolean offerFirst(E elem) {
         return addFirst(elem);
     }
     
+    @Override
     public boolean offerLast(E elem) {
         return addLast(elem);
     }
 
+    @Override
     public E poll() {
         return removeFirst();
     }
     
+    @Override
     public E pollFirst() {
         return removeFirst();
     }
     
+    @Override
     public E pollLast() {
         return removeLast();
     }
 
+    @Override
     public E peek() {
-        return get(0);
+        return getFirst();
     }
     
+    @Override
     public E peekFirst() {
-        return get(0);
+        return getFirst();
     }
     
+    @Override
     public E peekLast() {
-        return get(size - 1);
+        return getLast();
     }
     
+    @Override
     public boolean push(E elem) {
         return addFirst(elem);
     }
 
+    @Override
     public E pop() {
-        return poll();
+        return removeFirst();
     }
 
     public Object[] toArray() {
         Object[] clone = new Object[size];
-        ListNode<E> curr = head.next;
-        for (int i = 0; i < size; i++) {
-            clone[i] = curr.value;
-            curr = curr.next;
-        }
+        int index = 0;
+        for (E element : this) 
+            clone[index++] = element;
         return clone;
     }
 
     public <T> T[] toArray(T[] ts) {
-        ListNode<E> curr = head.next;
-        for (int i = 0; i < size; i++) {
-            ts[i] = (T) curr.value;
-            curr = curr.next;
-        }
-        return ts;
+        T[] clone = (T[]) new Object[size];
+        int index = 0;
+        for (E element : this) 
+            clone[index++] = (T) element;
+        return clone;
     }
     
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        ListNode<E> curr = head.next;
         sb.append('[');
-        for (int i = 0; i < size; i++) {
-            sb.append(curr.value);
+        for (E element : this) {
+            sb.append(element.toString());
             sb.append(", ");
-            curr = curr.next;
         }
         if (size != 0) {
             sb.setLength(sb.length() - 2);
@@ -188,88 +205,116 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         return sb.toString();
     }
     
-    private void linkNodes(ListNode<E> v, ListNode<E> u) {
-        v.next = u;
-        u.prev = v;
+    @Override
+    public Iterator<E> iterator() {
+        return new LinkedListIterator();
     }
     
-    private void insertAfter(ListNode<E> node, E elem) {
-        if (node == null) return;
-        ListNode<E> curr = new ListNode(elem);
-        ListNode<E> next = node.next;
-        linkNodes(node, curr);
-        linkNodes(curr, next);        
-    }
-    
-    private void insertBefore(ListNode<E> node, E elem) {
-        if (node == null) return;
-        ListNode<E> curr = new ListNode(elem);
-        ListNode<E> prev = node.prev;
-        linkNodes(prev, curr);
-        linkNodes(curr, node);
-    }
-    
-    private ListNode<E> getNode(int i) {
+    public ListNode getNode(int i) {
         return (i > size / 2) ? getFromTail(i) : getFromHead(i); 
     }
     
-    private ListNode<E> getFromHead(int index) {
-        ListNode<E> curr = head.next;
+    private ListNode getFromHead(int index) {
+        ListNode curr = head.next;
         for (int i = 0; i < index; i++) {
             curr = curr.next;
         }
         return curr;
     }
     
-    private ListNode<E> getFromTail(int index) {
-        ListNode<E> curr = tail.prev;
+    private ListNode getFromTail(int index) {
+        ListNode curr = tail.prev;
         for (int i = index; i < size - 1; i++) {
             curr = curr.prev;
         }
         return curr;
     }
 
-    public Iterator<E> iterator() {
-        return new LinkedListIterator();
-    }
-
-    class ListNode<E> {
-        public ListNode<E> next;
-        public ListNode<E> prev;
-        public E value;
+    private class LinkedListIterator implements Iterator<E> {
+        private ListNode pointer;
         
-        public ListNode() {
-            this(null);
+        public LinkedListIterator() {
+            this.pointer = head;
         }
         
-        public ListNode(E val) {
-            this.value = val;
+        @Override
+        public boolean hasNext() {
+            return pointer.next != tail;
+        }
+        
+        @Override
+        public E next() {
+            pointer = pointer.next;
+            return pointer.value;
+        }
+
+        @Override
+        public void remove() {
+            if (pointer == head) return;
+            pointer.remove();
         }
     }
     
-    class LinkedListIterator implements Iterator<E> {
-        private ListNode<E> node;
-        
-        public LinkedListIterator() {
-            this.node = head.next;
+    public class ListNode {
+        private ListNode next;
+        private ListNode prev;
+        private E value;
+                
+        private ListNode(E val) {
+            this.value = val;
         }
         
-        public boolean hasNext() {
-            return node != tail;
+        public ListNode next() {
+            return (next != tail) ? next : null;
         }
-
-        public E next() {
-            E element = (E) node.value;
-            node = node.next;
-            return element;
+        
+        public ListNode prev() {
+            return (prev != head) ? prev : null;
         }
-
-        public void remove() {
-            if (node.prev.prev == null) return;
-            linkNodes(node.prev.prev, node);
+        
+        public E set(E e) {
+            E previous = value;
+            this.value = e;
+            return previous;
+        }
+        public E value() {
+            return value;
+        }
+        
+        public void insertBefore(E e) {
+            ListNode node = new ListNode(e);
+            link(prev, node);
+            link(node, this);
+            size++;
+        }
+        
+        public void insertAfter(E e) {
+            ListNode node = new ListNode(e);
+            link(node, next);
+            link(this, node);
+            size++;
+        }
+        
+        public E remove() {
+            unlink(this);
             size--;
+            return value;
         }
         
+        private void link(ListNode v, ListNode u) {
+            if (v != null) v.next = u;
+            if (u != null) u.prev = v;
+        }
+
+        private void unlink(ListNode v) {
+            if (v == null) return;
+            if (v.prev != null) v.prev.next = v.next;
+            if (v.next != null) v.next.prev = v.prev;
+        }
+    
+        public String toString() {
+            return (value != null) ? value.toString() : null;
+        }
     }
     
     //////////////////////////////////////////////
@@ -277,13 +322,16 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
     //////////////////////////////////////////////
     
     public static void main(String[] args) {
-        H_List<Integer> list = new H_LinkedList<>();
+        H_LinkedList<Integer> list = new H_LinkedList<>();
         
         for (int i = 0; i < 10; i++) {
             list.add(i);
         }
         
+        System.out.println(list);
+        
         list.remove(7);
+        list.removeFirst();
         System.out.println(list);
         System.out.println(list.contains(7));
         
@@ -291,6 +339,8 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         for (int i = 10; i >= 0; i--) {
             queue.offer(i);
         }
+        
+        System.out.println(queue);
         System.out.println(queue.peek());
         while (!queue.isEmpty()) {
             System.out.println(queue.poll());
@@ -298,6 +348,5 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         
         for (int elem : list) 
             System.out.print(elem + " ");
-        
     }
 }

@@ -47,7 +47,8 @@ public class H_HashMap<K,V> implements H_Map<K,V> {
     }
 
     @Override
-    public boolean containsKey(K key) {
+    public boolean containsKey(Object o) {
+        K key = (K) o;
         int index = key.hashCode() % map.length;
         MapEntry entry = new MapEntry(key, null);
         return map[index].contains(entry);
