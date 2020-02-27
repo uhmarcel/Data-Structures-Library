@@ -244,8 +244,6 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
         
         public ListNode(E val) {
             this.value = val;
-            this.next = null;
-            this.prev = null;
         }
     }
     
