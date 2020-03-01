@@ -1,4 +1,4 @@
-package structures;
+package interfaces;
 
 public interface H_List<E> extends H_Collection<E> {
 

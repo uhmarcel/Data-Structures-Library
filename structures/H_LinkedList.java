@@ -2,6 +2,10 @@
 package structures;
 
 import java.util.Iterator;
+import interfaces.H_Deque;
+import interfaces.H_Queue;
+import interfaces.H_Stack;
+import interfaces.H_List;
 
 public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deque<E> {
     

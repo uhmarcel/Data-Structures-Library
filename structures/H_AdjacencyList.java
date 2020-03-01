@@ -1,5 +1,6 @@
 package structures;
 
+import interfaces.H_Graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

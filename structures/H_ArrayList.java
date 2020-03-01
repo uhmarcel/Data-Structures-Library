@@ -1,6 +1,7 @@
 
 package structures;
 
+import interfaces.H_List;
 import java.util.Iterator;
 
 public class H_ArrayList<E> implements H_List<E> {

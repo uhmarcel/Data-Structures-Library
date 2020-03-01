@@ -1,5 +1,5 @@
 
-package structures;
+package interfaces;
 
 public interface H_Set<E> extends H_Collection<E> {
 

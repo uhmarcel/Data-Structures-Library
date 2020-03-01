@@ -1,4 +1,4 @@
-package structures;
+package interfaces;
 
 
 public interface H_Queue<E> {

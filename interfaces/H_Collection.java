@@ -1,4 +1,4 @@
-package structures;
+package interfaces;
 
 public interface H_Collection<E> extends Iterable<E> {
 

@@ -13,7 +13,8 @@ public class H_SegmentTree<E> {
     public H_SegmentTree(E[] array, BiFunction<E,E,E> function) {
         this.tree = (E[]) new Object[array.length << 1];
         this.size = array.length;
-        this.function = extendFunction(function);
+        this.function = safeFunction(function);
+        
         for (int i = 0; i < size; i++) {
             update(i, array[i]);
         }
@@ -34,16 +35,16 @@ public class H_SegmentTree<E> {
         
         while (left < right) {
             if (left % 2 == 1)
-                val = (val == null) ? tree[left++] : function.apply(val, tree[left++]);
+                val = function.apply(val, tree[left++]);
             if (right % 2 == 1)
-                val = (val == null) ? tree[--right] : function.apply(val, tree[--right]);
+                val = function.apply(val, tree[--right]);
             left = left / 2;
             right = right / 2;
         }
         return val;
     }
     
-    private BiFunction<E,E,E> extendFunction(BiFunction<E,E,E> f) {
+    private BiFunction<E,E,E> safeFunction(BiFunction<E,E,E> f) {
         return (a, b) -> {
             if (a == null) return b;
             if (b == null) return a;

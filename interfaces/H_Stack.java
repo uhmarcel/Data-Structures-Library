@@ -1,5 +1,5 @@
 
-package structures;
+package interfaces;
 
 
 public interface H_Stack<E> {

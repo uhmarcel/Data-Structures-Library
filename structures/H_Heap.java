@@ -1,21 +1,33 @@
 package structures;
 
+import interfaces.H_Queue;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
-public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
+public class H_Heap<E> implements H_Queue<E> {
     
     private static final int DEFAULT_SIZE = 4;
     
-    private Object[] heap;
+    private Comparator<? super E> comparator;
+    private E[] heap;
     private int size;
     
     public H_Heap() {
-        this(DEFAULT_SIZE);
+        this(DEFAULT_SIZE, null);
     }
     
     public H_Heap(int capacity) {
-        this.heap = new Object[capacity];
+        this(capacity, null);
+    }
+    
+    public H_Heap(Comparator<? super E> cmptr) {
+        this(DEFAULT_SIZE, cmptr);
+    }
+    
+    public H_Heap(int capacity, Comparator<? super E> cmptr) {
+        this.comparator = cmptr;
+        this.heap = (E[]) new Object[capacity];
         this.size = 0;
     }
     
@@ -29,7 +41,7 @@ public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
     
     public E poll() {
         if (size < (heap.length >> 1)) shrink();
-        E head = (E) heap[0];
+        E head = heap[0];
         size--;
         swap(0, size);
         percolateDown(0);
@@ -37,7 +49,7 @@ public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
     }
     
     public E peek() {
-        return (E) heap[0];
+        return heap[0];
     }
     
     public boolean add(E element) {
@@ -57,25 +69,25 @@ public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
     }
 
     private void percolateUp(int index) {
-        Comparable<? super E> key = (Comparable<? super E>) heap[index];
+        E element = heap[index];
         int child = index; 
         while (child > 0) {
             int parent = (child - 1) / 2; 
-            if (key.compareTo((E) heap[parent]) >= 0) break;
+            if (compare(element, heap[parent]) >= 0) break;
             swap(child, parent);
             child = parent;
         }
     }
     
     private void percolateDown(int index) {
-        Comparable<? super E> key = (Comparable<? super E>) heap[index];
+        E element = heap[index];
         int parent = index;
         while (parent < size) {
             int child = parent * 2 + 1;
-            if (child < size-1 && ((E) heap[child]).compareTo((E) heap[child + 1]) > 0) {
+            if (child < size-1 && compare(heap[child], heap[child + 1]) > 0) {
                 child++;
             }       
-            if (child >= size || key.compareTo((E) heap[child]) <= 0) {
+            if (child >= size || compare(element, heap[child]) <= 0) {
                 break;
             }
             swap(child, parent);
@@ -83,10 +95,21 @@ public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
         }
     }
     
+    private int compare(E elem1, E elem2) {
+        if (elem1 == null || elem2 == null)
+            throw new NullPointerException();
+        if (comparator == null) {
+            Comparable<? super E> cmp = (Comparable<? super E>) elem1;
+            return cmp.compareTo(elem2);
+        } else {
+            return comparator.compare(elem1, elem2);
+        }
+    }
+    
     private void grow() {
         if (heap.length > Integer.MAX_VALUE / 2) return;
         int doubleCapacity = heap.length << 1;
-        Object[] doubleHeap = new Object[doubleCapacity];
+        E[] doubleHeap = (E[]) new Object[doubleCapacity];
         for (int i = 0; i < size; i++) {
             doubleHeap[i] = heap[i];
         }
@@ -96,7 +119,7 @@ public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
     private void shrink() {
         if (heap.length <= DEFAULT_SIZE) return;
         int halfCapacity = heap.length >> 1;
-        Object[] halfHeap = new Object[halfCapacity];
+        E[] halfHeap = (E[]) new Object[halfCapacity];
         for (int i = 0; i < size; i++) {
             halfHeap[i] = heap[i];
         }
@@ -104,7 +127,7 @@ public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
     }
     
     private void swap(int i, int j) {
-        Object temp = heap[i];
+        E temp = heap[i];
         heap[i] = heap[j];
         heap[j] = temp;
     }
@@ -118,16 +141,15 @@ public class H_Heap<E extends Comparable<E>> implements H_Queue<E> {
     //////////////////////////////////////////////
     
     public static void main(String[] mains) {
-        H_Heap<Integer> H = new H_Heap<>();
+        H_Heap<Integer> H = new H_Heap<>((a,b) -> b - a);
         Random r = new Random();
         for (int i = 0; i < 30; i++) {
-            H.add(r.nextInt(10000));
+            H.add(r.nextInt(100));
         }
         
         while (!H.isEmpty()) {
             System.out.print(H.poll() + ", ");
         }
     }
-
 
 }

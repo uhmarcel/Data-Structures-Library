@@ -1,6 +1,8 @@
 
 package structures;
 
+import interfaces.H_Map;
+import interfaces.H_Set;
 import java.util.Iterator;
 
 

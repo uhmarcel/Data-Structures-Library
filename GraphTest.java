@@ -1,11 +1,13 @@
 
-import java.util.Arrays;
-import structures.GraphPlain;
+import java.util.*;
+import old.GraphPlain;
 
 
 public class GraphTest {
     
     public static void main(String[] args) {
+        System.out.println(subdomainVisits(new String[] {"9001 discuss.leetcode.com"}));
+        /*
         GraphPlain g = new GraphPlain(6);
         g.addEdge(0, 1, 5); 
         g.addEdge(0, 2, 3); 
@@ -72,6 +74,32 @@ public class GraphTest {
         
         
 //        g.MST();
-        
+        */
     }
+    
+    public static List<String> subdomainVisits(String[] cpdomains) {
+        Map<String, Integer> map = new HashMap<>();
+        
+        for (String s : cpdomains) {
+            String[] splitted = s.split(" ");
+            int count = Integer.parseInt(splitted[0]);
+            
+            String[] domains = splitted[1].split("\\.");
+            String curr = "";
+            
+            for (int i = domains.length - 1; i >= 0; i--) {
+                curr = "." + domains[i] + curr;
+                map.put(curr.substring(1), map.getOrDefault(curr, 0) + count);
+            }
+        }
+        
+        System.out.println(map);
+        List<String> result = new ArrayList<>();
+        for (String key : map.keySet()) {
+            result.add(map.get(key) + " " + key);
+        }
+        
+        return result;
+    }
+    
 }

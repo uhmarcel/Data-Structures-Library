@@ -1,6 +1,10 @@
 
 package structures;
 
+import interfaces.H_Map;
+import interfaces.H_Set;
+import interfaces.H_Collection;
+
 
 public class H_LinkedHashMap<K, V> implements H_Map<K, V> {
 

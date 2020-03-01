@@ -1,5 +1,6 @@
 package structures;
 
+import interfaces.H_Graph;
 import java.util.Collection;
 
 public class H_AdjacencyMatrix<Any> implements H_Graph<Any> {

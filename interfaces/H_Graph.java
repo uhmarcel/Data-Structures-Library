@@ -1,4 +1,4 @@
-package structures;
+package interfaces;
 import java.util.Collection;
 
 public interface H_Graph<Any> {
