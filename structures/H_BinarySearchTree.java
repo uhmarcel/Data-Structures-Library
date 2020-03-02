@@ -105,10 +105,22 @@ public class H_BinarySearchTree<E> implements H_Tree<E> {
         return new InorderIterator();
     }
     
+    @Override
     public Iterator<E> inorderIterator() {
         return new InorderIterator();
     }
     
+    @Override
+    public Iterator<E> preorderIterator() {
+        return new PreorderIterator();
+    }
+    
+    @Override
+    public Iterator<E> postorderIterator() {
+        return new PostorderIterator();
+    }
+    
+    @Override
     public Iterator<E> descendingIterator() {
         return new DescendingIterator();
     }
@@ -223,6 +235,52 @@ public class H_BinarySearchTree<E> implements H_Tree<E> {
                 stack.push(t);
                 t = t.left;
             }
+        }
+    } 
+    
+    public class PreorderIterator implements Iterator<E> {
+        private final H_Stack<TreeNode<E>> stack;
+        
+        public PreorderIterator() {
+            this.stack = new H_LinkedList<>();
+            stack.push(root);
+        }
+        
+        public boolean hasNext() {
+            return !stack.isEmpty();
+        }
+
+        public E next() {
+            TreeNode<E> t = stack.pop();
+            if (t.right != null) stack.push(t.right);
+            if (t.left != null) stack.push(t.left);
+            return t.value;
+        }
+    } 
+
+    public class PostorderIterator implements Iterator<E> {
+        private final H_List list;
+        private final Iterator<E> itr;
+        
+        public PostorderIterator() {
+            this.list = new H_ArrayList<>();
+            postorderTraversal(root);
+            itr = list.iterator();
+        }
+        
+        public boolean hasNext() {
+            return itr.hasNext();
+        }
+
+        public E next() {
+            return itr.next();
+        }
+        
+        private void postorderTraversal(TreeNode<E> t) {
+            if (t == null) return;
+            postorderTraversal(t.left);
+            postorderTraversal(t.right);
+            list.add(t.value);
         }
     } 
     

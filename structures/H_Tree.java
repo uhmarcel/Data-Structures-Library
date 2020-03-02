@@ -15,6 +15,8 @@ public interface H_Tree<E> extends H_Collection<E> {
     public void clear();
     
     public Iterator<E> inorderIterator();
+    public Iterator<E> preorderIterator();
+    public Iterator<E> postorderIterator();
     public Iterator<E> descendingIterator();
     
     interface Node<E> {}

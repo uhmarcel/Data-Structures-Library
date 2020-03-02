@@ -17,46 +17,77 @@ public class H_AVLTree<E> extends H_BinarySearchTree<E> {
     }
     
     @Override
+    protected TreeNode<E> createNode(E element) {
+        return new AVLNode<>(element);
+    }
+    
+    @Override
     public boolean add(E element) {
         int prevSize = size;
         root = addRec(root, element);
         return prevSize != size;
     }
     
+    @Override
     protected TreeNode<E> addRec(TreeNode<E> t, E element) {
-        TreeNode<E> r = super.addRec(t, element);
-        refreshHeight(r);
-        return r;
-    }
-    
-    protected TreeNode<E> removeRec(TreeNode<E> t, E element) {
-        TreeNode<E> r = super.removeRec(t, element);
-        refreshHeight(r);
-        return r;
-    }
-    
-    protected TreeNode<E> replaceLeftmost(TreeNode<E> t, TreeNode<E> target) {
-        TreeNode<E> r = super.replaceLeftmost(t, target);
-        refreshHeight(r);
-        return r;
-    }
-    
-    private void refreshHeight(TreeNode<E> t) {
-        if (t == null) return;
-        AVLNode<E> curr = (AVLNode<E>) t;
-        int leftHeight = height(t.left);
-        int rightHeight = height(t.right);
-        
-        curr.height = Math.max(height(t.left), height(t.right)) + 1;
-        
-        if (Math.abs(leftHeight - rightHeight) > 1) { 
-            //balance(t);
-        }
+        t = super.addRec(t, element);
+        return checkBalance(t);
     }
     
     @Override
-    protected TreeNode<E> createNode(E element) {
-        return new AVLNode<>(element);
+    protected TreeNode<E> removeRec(TreeNode<E> t, E element) {
+        t = super.removeRec(t, element);
+        return checkBalance(t);
+    }
+    
+    protected TreeNode<E> replaceLeftmost(TreeNode<E> t, TreeNode<E> target) {
+        t = super.replaceLeftmost(t, target);
+        return checkBalance(t);
+    }
+    
+    private TreeNode<E> checkBalance(TreeNode<E> t) {
+        if (t == null) return null;
+        refreshHeight((AVLNode<E>) t);
+        int balanceFactor = balanceFactor(t);
+        if (balanceFactor > 1) {
+            if (balanceFactor(t.right) < 0) 
+                t.right = rotateRight(t.right);
+            t = rotateLeft(t);
+        } else if (balanceFactor < -1) {
+            if (balanceFactor(t.left) > 0)
+                t.left = rotateLeft(t.left);
+            t = rotateRight(t);
+        } 
+        return t;
+    }
+    
+    private int refreshHeight(AVLNode<E> t) {
+        if (t == null) return 0;
+        t.height = Math.max(height(t.left), height(t.right)) + 1;
+        return t.height;
+    }
+    
+    private int balanceFactor(TreeNode<E> t) {
+        if (t == null) return 0;
+        return height(t.right) - height(t.left);
+    }
+    
+    private TreeNode<E> rotateRight(TreeNode<E> t) {
+        TreeNode<E> r = t.left;
+        t.left = r.right;
+        r.right = t;
+        refreshHeight((AVLNode<E>) t);
+        refreshHeight((AVLNode<E>) r);
+        return r;
+    }
+    
+    private TreeNode<E> rotateLeft(TreeNode<E> t) {
+        TreeNode<E> r = t.right;
+        t.right = r.left;
+        r.left = t;
+        refreshHeight((AVLNode<E>) t);
+        refreshHeight((AVLNode<E>) r);
+        return r;
     }
     
     private int height(TreeNode<E> t) {
@@ -70,10 +101,6 @@ public class H_AVLTree<E> extends H_BinarySearchTree<E> {
         public AVLNode(E value) {
             super(value);
             height = 1;
-        };
-        
-        public String toString() {
-            return "(" + value.toString() + "," + height + ")";
         }
     }
    
@@ -82,21 +109,56 @@ public class H_AVLTree<E> extends H_BinarySearchTree<E> {
     //////////////////////////////////////////////
     
     public static void main(String[] args) {
-        H_AVLTree<Integer> t = new H_AVLTree<>();
+        H_Tree<Integer> avl = new H_AVLTree<>();
+        H_Tree<Integer> bst = new H_BinarySearchTree<>();
         Random r = new Random();
         
-        t.add(50);
+        avl.add(50);
+        bst.add(50);
         for (int i = 0; i < 30; i++) {
-            t.add(r.nextInt(100));
+            int next = r.nextInt(100);
+            avl.add(next);
+            bst.add(next);
         }
         
-        System.out.println(t);
         
-        t.remove(7);
+        System.out.println(avl);
+        System.out.println(bst);
+        
+        avl.remove(7);
+        bst.remove(7);
+        System.out.println(avl);
+        System.out.println(bst);
+        System.out.println(avl.contains(7));
+        System.out.println(bst.contains(7));
+        
+        for (Iterator<Integer> iter = avl.inorderIterator(); iter.hasNext();) {
+            System.out.print(iter.next() + ", ");
+        }
+        System.out.println();
+        
+        for (Iterator<Integer> iter = bst.inorderIterator(); iter.hasNext();) {
+            System.out.print(iter.next() + ", ");
+        }
+        System.out.println();
+        
+        H_Tree<Integer> t = new H_AVLTree<>();
+        for (int i = 1; i <= 5; i++) {
+            t.add(i);
+        }
         System.out.println(t);
-        System.out.println(t.contains(7));
         
         for (Iterator<Integer> iter = t.inorderIterator(); iter.hasNext();) {
+            System.out.print(iter.next() + ", ");
+        }
+        System.out.println();
+        
+        for (Iterator<Integer> iter = t.preorderIterator(); iter.hasNext();) {
+            System.out.print(iter.next() + ", ");
+        }
+        System.out.println();
+        
+        for (Iterator<Integer> iter = t.postorderIterator(); iter.hasNext();) {
             System.out.print(iter.next() + ", ");
         }
         System.out.println();
