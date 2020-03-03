@@ -1,5 +1,5 @@
 
-package structures;
+package interfaces;
 
 import interfaces.H_Collection;
 import java.util.Iterator;
@@ -18,7 +18,5 @@ public interface H_Tree<E> extends H_Collection<E> {
     public Iterator<E> preorderIterator();
     public Iterator<E> postorderIterator();
     public Iterator<E> descendingIterator();
-    
-    interface Node<E> {}
     
 }

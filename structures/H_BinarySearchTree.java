@@ -1,6 +1,7 @@
 
 package structures;
 
+import interfaces.H_Tree;
 import interfaces.H_List;
 import interfaces.H_Queue;
 import interfaces.H_Stack;
@@ -120,7 +121,6 @@ public class H_BinarySearchTree<E> implements H_Tree<E> {
         return new PostorderIterator();
     }
     
-    @Override
     public Iterator<E> descendingIterator() {
         return new DescendingIterator();
     }

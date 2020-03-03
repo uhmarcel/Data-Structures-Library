@@ -1,11 +1,11 @@
 package structures;
 
-import interfaces.H_Queue;
+import interfaces.H_PriorityQueue;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-public class H_Heap<E> implements H_Queue<E> {
+public class H_BinaryHeap<E> implements H_PriorityQueue<E> {
     
     private static final int DEFAULT_SIZE = 4;
     
@@ -13,19 +13,19 @@ public class H_Heap<E> implements H_Queue<E> {
     private E[] heap;
     private int size;
     
-    public H_Heap() {
+    public H_BinaryHeap() {
         this(DEFAULT_SIZE, null);
     }
     
-    public H_Heap(int capacity) {
+    public H_BinaryHeap(int capacity) {
         this(capacity, null);
     }
     
-    public H_Heap(Comparator<? super E> cmptr) {
+    public H_BinaryHeap(Comparator<? super E> cmptr) {
         this(DEFAULT_SIZE, cmptr);
     }
     
-    public H_Heap(int capacity, Comparator<? super E> cmptr) {
+    public H_BinaryHeap(int capacity, Comparator<? super E> cmptr) {
         this.comparator = cmptr;
         this.heap = (E[]) new Object[capacity];
         this.size = 0;
@@ -58,6 +58,10 @@ public class H_Heap<E> implements H_Queue<E> {
     
     public E remove() {
         return poll();
+    }
+    
+    public Comparator<? super E> comparator() {
+        return this.comparator;
     }
 
     public int size() {
@@ -141,7 +145,7 @@ public class H_Heap<E> implements H_Queue<E> {
     //////////////////////////////////////////////
     
     public static void main(String[] mains) {
-        H_Heap<Integer> H = new H_Heap<>((a,b) -> b - a);
+        H_BinaryHeap<Integer> H = new H_BinaryHeap<>((a,b) -> b - a);
         Random r = new Random();
         for (int i = 0; i < 30; i++) {
             H.add(r.nextInt(100));
