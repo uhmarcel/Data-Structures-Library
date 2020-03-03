@@ -1,12 +1,12 @@
 
 package structures;
 
-import interfaces.H_SortedSet;
 import java.util.Comparator;
 import java.util.Iterator;
+import interfaces.H_SortedSet_TODO;
 
 
-public class H_TreeSet<E> extends H_AVLTree<E> implements H_SortedSet<E> {
+public class H_TreeSet<E> extends H_AVLTree<E> implements H_SortedSet_TODO<E> {
 
     public Comparator<? super E> comparator() {
         return super.comparator;
@@ -31,12 +31,12 @@ public class H_TreeSet<E> extends H_AVLTree<E> implements H_SortedSet<E> {
     }
 
     @Override
-    public H_SortedSet<E> headSet(E targetElement) {
+    public H_SortedSet_TODO<E> headSet(E targetElement) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public H_SortedSet<E> tailSet(E targetElement) {
+    public H_SortedSet_TODO<E> tailSet(E targetElement) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

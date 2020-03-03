@@ -1,11 +1,11 @@
 package structures;
 
-import interfaces.H_PriorityQueue;
+import interfaces.H_Heap;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-public class H_BinaryHeap<E> implements H_PriorityQueue<E> {
+public class H_BinaryHeap<E> implements H_Heap<E> {
     
     private static final int DEFAULT_SIZE = 4;
     
@@ -145,15 +145,25 @@ public class H_BinaryHeap<E> implements H_PriorityQueue<E> {
     //////////////////////////////////////////////
     
     public static void main(String[] mains) {
-        H_BinaryHeap<Integer> H = new H_BinaryHeap<>((a,b) -> b - a);
+        H_Heap<Integer> H = new H_BinaryHeap<>((a,b) -> b - a);
         Random r = new Random();
         for (int i = 0; i < 30; i++) {
-            H.add(r.nextInt(100));
+            H.offer(r.nextInt(100));
         }
         
         while (!H.isEmpty()) {
             System.out.print(H.poll() + ", ");
         }
+    }
+
+    @Override
+    public void decreaseKey(E key) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void merge(H_Heap<E> heap) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
