@@ -1,9 +1,11 @@
 
 package structures;
 
-import interfaces.H_Heap;
-import interfaces.H_List;
+import structures.interfaces.H_Heap;
+import structures.interfaces.H_PriorityQueue;
+import structures.interfaces.H_Queue;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Random;
 
 
@@ -17,60 +19,67 @@ public class H_PairingHeap<E> implements H_Heap<E> {
     public H_PairingHeap(Comparator<? super E> cmptr) {
         this.comparator = cmptr;
     } 
+
     
     @Override
-    public void decreaseKey(E key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void merge(H_Heap<E> heap) {
-        if (heap == null || !(heap instanceof H_PairingHeap))
-            throw new IllegalArgumentException();
-        
-        H_PairingHeap<E> toMerge = (H_PairingHeap<E>) heap; // what if diff cmptr?
-        size = size + toMerge.size;
-        root = mergeTrees(root, toMerge.root);
-    }
-
-    @Override
-    public boolean offer(E element) {
+    public ElementKey<E> insert(E element) {
         if (element == null) throw new NullPointerException();
-        H_PairingHeap<E> toAdd = new H_PairingHeap<>();
-        toAdd.root = new PairingTree<>(element);
-        toAdd.size = 1;
-        this.merge(toAdd);
-        return true;
+         
+        PairingTree<E> node = new PairingTree<>(element);
+        root = PairingTree.merge(root, node, comparator);
+        size = size + 1;
+        return node;
     }
 
     @Override
-    public E poll() {
+    public E deleteMin() {
         if (root == null) throw new IllegalStateException();
+        
         E minimum = root.value;
-        root = mergePairs(root.childs);
-        size--;
+        root = PairingTree.mergePairs(root.leftmostChild, comparator);
+        size = size - 1;
         return minimum;
     }
 
     @Override
-    public E peek() {
+    public E findMin() {
         if (root == null) throw new IllegalStateException();
         return root.value;
     }
-    
-    private void setHeap(H_PairingHeap<E> heap) {
-        this.root = heap.root;
-        this.size = heap.size;
+
+    @Override
+    public void merge(H_Heap<E> heap) {        
+        if (heap == null || !(heap instanceof H_PairingHeap)) 
+            throw new IllegalArgumentException();
+        
+        H_PairingHeap<E> other = (H_PairingHeap<E>) heap; 
+        size = size + other.size;
+        root = PairingTree.merge(root, other.root, comparator);
     }
 
+    @Override
+    public ElementKey<E> decreaseKey(ElementKey<E> key, E value) {
+        if (key == null || value == null) 
+            throw new NullPointerException();
+        if (!(key instanceof PairingTree)) 
+            throw new IllegalArgumentException();
+        
+        PairingTree<E> node = (PairingTree<E>) key;
+        if (PairingTree.compare(node.value, value, comparator) < 0) 
+            throw new IllegalArgumentException();
+        node.value = value;
+        
+        PairingTree<E> parent = node.getParent();
+        if (parent != null && PairingTree.compare(parent.value, node.value, comparator) > 0) {
+            node.unlink();
+            root = PairingTree.merge(root, node, comparator);
+        }
+        return node;
+    }
+    
     @Override
     public int size() {
         return this.size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.size == 0;
     }
 
     @Override
@@ -78,63 +87,110 @@ public class H_PairingHeap<E> implements H_Heap<E> {
         return this.comparator;
     }
     
-    private PairingTree<E> mergeTrees(PairingTree<E> A, PairingTree<E> B) {
-        if (A == null) return B;
-        if (B == null) return A;
-        
-        if (compare(A.value, B.value) < 0) {
-            A.childs.add(B);
-            return A;
-        } else {
-            B.childs.add(A);
-            return B;
-        }
-    }
-    
-    private PairingTree<E> mergePairs(H_List<PairingTree<E>> trees) {
-        if (trees.size() == 0)
-            return null;
-        if (trees.size() == 1)
-            return trees.get(0);
-        return mergeTrees(mergeTrees(trees.remove(0), trees.remove(0)), mergePairs(trees)); 
-    }
-    
     public String toString() {
-        StringBuilder buffer = new StringBuilder(50);
-        print(root, buffer, "", "");
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(50);
+        print(root, sb, "", "");
+        return sb.toString();
     }
 
-    private void print(PairingTree<E> t, StringBuilder buffer, String prefix, String childrenPrefix) {
-        buffer.append(prefix).append(t.value.toString()).append('\n');
-        for (int i = 0; i < t.childs.size(); i++) {
-            if (i == t.childs.size() - 1) {
-                print(t.childs.get(i), buffer, childrenPrefix + "└── ", childrenPrefix + "    ");
-            } else { 
-                print(t.childs.get(i), buffer, childrenPrefix + "├── ", childrenPrefix + "│   ");
-            }
-        }
-    }
-        
-    private int compare(E elem1, E elem2) {
-        if (elem1 == null || elem2 == null)
-            throw new NullPointerException();
-        if (comparator == null) {
-            Comparable<? super E> cmp = (Comparable<? super E>) elem1;
-            return cmp.compareTo(elem2);
-        } else {
-            return comparator.compare(elem1, elem2);
+    private void print(PairingTree<E> t, StringBuilder sb, String prefix, String childPrefix) {
+        if (t == null) return;
+        sb.append(prefix).append(t.value.toString()).append('\n');
+        PairingTree<E> curr = t.leftmostChild;
+        while (curr != null) {
+            if (curr.nextSibling != null)
+                print(curr, sb, childPrefix + "├── ", childPrefix + "│   ");
+            else 
+                print(curr, sb, childPrefix + "└── ", childPrefix + "    ");
+            curr = curr.nextSibling;
         }
     }
     
-    private static class PairingTree<E> {
+    private static class PairingTree<E> implements ElementKey<E> {
+        
         private E value;
-        private H_List<PairingTree<E>> childs;
+        private PairingTree<E> nextSibling;
+        private PairingTree<E> leftmostChild;
+        private PairingTree<E> previous;
         
         public PairingTree(E value) {
             this.value = value;
-            this.childs = new H_LinkedList<>();
         }
+        
+        @Override
+        public E getValue() {
+            return value;
+        }
+        
+        public static <T> PairingTree<T> merge(PairingTree<T> A, PairingTree<T> B, Comparator<? super T> cmptr) {
+            if (A == null) return B;
+            if (B == null) return A;
+            
+            if (compare(A.value, B.value, cmptr) < 0) {
+                B.unlink();
+                A.link(B);
+                return A;
+            } else {
+                A.unlink();
+                B.link(A);
+                return B;
+            }
+        } 
+        
+        public static <T> PairingTree<T> mergePairs(PairingTree<T> list, Comparator<? super T> cmptr) {
+            if (list == null) return null;
+            if (list.nextSibling == null) return list;
+            
+            PairingTree<T> firstPair = merge(list, list.nextSibling, cmptr);
+            return merge(firstPair, mergePairs(firstPair.nextSibling, cmptr), cmptr);
+        }
+        
+        private void unlink() {
+            if (previous != null) {
+                if (previous.nextSibling == this)
+                    previous.nextSibling = nextSibling;
+                else 
+                    previous.leftmostChild = nextSibling;
+            }
+            
+            if (nextSibling != null) {
+                nextSibling.previous = previous;
+            }
+            this.previous = null;
+            this.nextSibling = null;
+        }
+        
+        private void link(PairingTree<E> node) {
+            if (node == null) throw new NullPointerException();
+            if (leftmostChild != null) {
+               node.nextSibling = leftmostChild;
+               leftmostChild.previous = node;
+            }
+            leftmostChild = node;
+            node.previous = this;
+        }
+
+        private static <T> int compare(T elem1, T elem2, Comparator<? super T> cmptr) {
+            if (elem1 == null || elem2 == null)
+                throw new NullPointerException();
+            if (cmptr == null) {
+                Comparable<? super T> cmp = (Comparable<? super T>) elem1;
+                return cmp.compareTo(elem2);
+            } else {
+                return cmptr.compare(elem1, elem2);
+            }
+        }
+        
+        private PairingTree<E> getParent() {
+            if (previous == null) return null;
+            
+            PairingTree<E> leftmost = this;
+            while (leftmost != null && leftmost.previous.nextSibling == leftmost) {
+                leftmost = leftmost.previous;
+            }
+            return (leftmost == null) ? null : leftmost.previous;
+        }
+
     }
     
         
@@ -145,14 +201,25 @@ public class H_PairingHeap<E> implements H_Heap<E> {
     public static void main(String[] mains) {
         H_Heap<Integer> H = new H_PairingHeap<>();
         Random r = new Random();
-        for (int i = 0; i < 30; i++) {
-            H.offer(r.nextInt(100));
-            System.out.println(H.size());
+        for (int i = 0; i < 50; i++) {
+            int x = r.nextInt(100);
+            H.offer(x);
+            System.out.println(H.size() + " -> " + x);
             System.out.println(H);
         }
+        System.out.println("insert 50");
+        ElementKey<Integer> key = H.insert(50);
+        System.out.println(H);
+        System.out.println("poll");
+        H.poll();
+        System.out.println(H);
+        System.out.println("decrease key");
+        H.decreaseKey(key, 22);
+        System.out.println(H);
         
         while (!H.isEmpty()) {
             System.out.println("Removing -> " + H.poll() + " (" + H.size() + ")");
+            System.out.println(H);
         }
     }
 

@@ -1,14 +1,14 @@
 
 package structures;
 
-import interfaces.H_Map;
-import interfaces.H_Set;
-import interfaces.H_Collection;
+import structures.interfaces.H_Map;
+import structures.interfaces.H_Set;
+import structures.interfaces.H_Collection;
 import java.util.Iterator;
 
 public class H_AssociativeList<K,V> implements H_Map<K,V> {
 
-    private H_LinkedList<MapEntry> list;
+    private final H_LinkedList<MapEntry> list;
     
     public H_AssociativeList() {
         this.list = new H_LinkedList<>();

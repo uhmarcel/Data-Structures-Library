@@ -1,4 +1,4 @@
-package interfaces;
+package structures.interfaces;
 
 
 public interface H_Queue<E> {
@@ -8,6 +8,8 @@ public interface H_Queue<E> {
     public E peek();
     
     public int size();
-    public boolean isEmpty();
     
+    public default boolean isEmpty() {
+        return this.size() == 0;
+    }
 }

@@ -1,5 +1,5 @@
 
-package interfaces;
+package structures.interfaces;
 
 import java.util.Comparator;
 

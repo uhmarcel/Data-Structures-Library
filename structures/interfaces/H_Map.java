@@ -1,5 +1,5 @@
 
-package interfaces;
+package structures.interfaces;
 
 
 public interface H_Map<K,V> {

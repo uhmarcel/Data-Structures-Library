@@ -1,7 +1,7 @@
 
-package interfaces;
+package structures.interfaces;
 
-import interfaces.H_Collection;
+import structures.interfaces.H_Collection;
 import java.util.Iterator;
 
 

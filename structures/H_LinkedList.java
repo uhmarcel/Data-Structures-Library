@@ -2,10 +2,10 @@
 package structures;
 
 import java.util.Iterator;
-import interfaces.H_Deque;
-import interfaces.H_Queue;
-import interfaces.H_Stack;
-import interfaces.H_List;
+import structures.interfaces.H_Deque;
+import structures.interfaces.H_Queue;
+import structures.interfaces.H_Stack;
+import structures.interfaces.H_List;
 
 public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deque<E> {
     
@@ -176,22 +176,6 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
     @Override
     public E pop() {
         return removeFirst();
-    }
-
-    public Object[] toArray() {
-        Object[] clone = new Object[size];
-        int index = 0;
-        for (E element : this) 
-            clone[index++] = element;
-        return clone;
-    }
-
-    public <T> T[] toArray(T[] ts) {
-        T[] clone = (T[]) new Object[size];
-        int index = 0;
-        for (E element : this) 
-            clone[index++] = (T) element;
-        return clone;
     }
     
     @Override

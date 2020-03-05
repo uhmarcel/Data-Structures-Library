@@ -1,7 +1,7 @@
 
 package structures;
 
-import interfaces.H_Tree;
+import structures.interfaces.H_Tree;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;

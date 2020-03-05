@@ -1,7 +1,7 @@
 
 package structures;
 
-import interfaces.H_List;
+import structures.interfaces.H_List;
 import java.util.Iterator;
 
 public class H_ArrayList<E> implements H_List<E> {
@@ -21,10 +21,6 @@ public class H_ArrayList<E> implements H_List<E> {
 
     public int size() {
         return this.size;
-    }
-
-    public boolean isEmpty() {
-        return this.size == 0;
     }
 
     public boolean contains(Object o) {
@@ -92,28 +88,12 @@ public class H_ArrayList<E> implements H_List<E> {
     public Iterator<E> iterator() {
         return new ArrayListIterator<>();
     }
-
-    public Object[] toArray() {
-        Object[] clone = new Object[size];
-        for (int i = 0; i < size; i++) {
-            clone[i] = this.array[i];
-        }
-        return clone;
-    }
-
-    public <T> T[] toArray(T[] ts) {
-        for (int i = 0; i < size; i++) {
-            ts[i] = (T) this.array[i];
-        }
-        return ts;
-    }
     
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
         for (int i = 0; i < size; i++) {
-            sb.append(array[i]);
-            sb.append(", ");
+            sb.append(array[i]).append(", ");
         }
         if (size != 0) {
             sb.setLength(sb.length() - 2);

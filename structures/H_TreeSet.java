@@ -3,7 +3,7 @@ package structures;
 
 import java.util.Comparator;
 import java.util.Iterator;
-import interfaces.H_SortedSet_TODO;
+import structures.interfaces.H_SortedSet_TODO;
 
 
 public class H_TreeSet<E> extends H_AVLTree<E> implements H_SortedSet_TODO<E> {

@@ -1,9 +1,9 @@
 
 package structures;
 
-import interfaces.H_Map;
-import interfaces.H_Set;
-import interfaces.H_List;
+import structures.interfaces.H_Map;
+import structures.interfaces.H_Set;
+import structures.interfaces.H_List;
 
 
 public class H_Trie<E> {

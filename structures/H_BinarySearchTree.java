@@ -1,10 +1,10 @@
 
 package structures;
 
-import interfaces.H_Tree;
-import interfaces.H_List;
-import interfaces.H_Queue;
-import interfaces.H_Stack;
+import structures.interfaces.H_Tree;
+import structures.interfaces.H_List;
+import structures.interfaces.H_Queue;
+import structures.interfaces.H_Stack;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
