@@ -2,14 +2,17 @@
 package structures;
 
 import structures.interfaces.H_Heap;
-import structures.interfaces.H_PriorityQueue;
-import structures.interfaces.H_Queue;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Random;
 
 
 public class H_PairingHeap<E> implements H_Heap<E> {
+        
+    // find-min:        O(1)
+    // delete-min:      O(logn)
+    // insert:          O(1)
+    // decrease-key:    O(logn)
+    // merge:           O(1)
     
     private Comparator<? super E> comparator;
     private PairingTree<E> root;

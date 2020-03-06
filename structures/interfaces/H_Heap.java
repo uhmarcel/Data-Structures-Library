@@ -8,7 +8,7 @@ public interface H_Heap<E> extends H_PriorityQueue<E> {
     public E deleteMin();
     public E findMin();
     public void merge(H_Heap<E> heap);
-    public Object decreaseKey(ElementKey<E> key, E value);       
+    public ElementKey<E> decreaseKey(ElementKey<E> key, E value);       
     
     public default boolean offer(E elem) {
         return insert(elem) != null;

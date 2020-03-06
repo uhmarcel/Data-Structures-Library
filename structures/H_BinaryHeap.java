@@ -1,14 +1,18 @@
 package structures;
 
-import structures.interfaces.H_Collection;
 import structures.interfaces.H_Heap;
-import structures.interfaces.H_List;
 import structures.interfaces.H_PriorityQueue;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
 public class H_BinaryHeap<E> implements H_Heap<E> {
+    
+    // find-min:        O(1)
+    // delete-min:      O(logn)
+    // insert:          O(logn)
+    // decrease-key:    O(logn)
+    // merge:           O(n)
     
     private static final int DEFAULT_SIZE = 4;
     
