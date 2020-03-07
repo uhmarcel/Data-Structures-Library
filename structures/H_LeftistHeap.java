@@ -79,7 +79,7 @@ public class H_LeftistHeap<E> implements H_Heap<E> {
             else 
                 node.parent.right = null;
             
-            // Update all parent distances - O(logn)
+            // Update all distances upwards - O(logn)
             LeftistTree<E> curr = node.parent;
             while (curr != null) {
                 int prevDistance = curr.distance;

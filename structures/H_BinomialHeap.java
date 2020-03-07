@@ -71,7 +71,25 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
 
     @Override
     public ElementKey<E> decreaseKey(ElementKey<E> key, E value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (key == null || value == null) 
+            throw new NullPointerException();
+        if (!(key instanceof BinomialTree)) 
+            throw new IllegalArgumentException();
+        
+        BinomialTree<E> node = (BinomialTree<E>) key;
+        
+        if (node.value == null || BinomialTree.compare(node.value, value, comparator) < 0) 
+            throw new IllegalArgumentException();
+        node.value = value;
+        
+        BinomialTree<E> parent = node.getParent();
+        while (parent != null && BinomialTree.compare(parent.value, value, comparator) > 0) {
+            BinomialTree.swapReferences(parent, node);
+            if (parent == rootNodes) // rootNodes might have been swapped
+                rootNodes = node;    // fix by changing the pointer to keep first.
+            parent = node.getParent();
+        }
+        return node;
     }
 
     @Override
@@ -211,7 +229,7 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
             node.previous = this;
             degree++;
         }
-          
+        
         private void unlink() {
             if (previous != null) {
                 if (previous.sibling == this)
@@ -226,6 +244,16 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
             this.previous = null;
             this.sibling = null;
         }
+        
+        private BinomialTree<E> getParent() {
+            if (previous == null) return null;
+            
+            BinomialTree<E> leftmost = this;
+            while (leftmost != null && leftmost.previous.sibling == leftmost) {
+                leftmost = leftmost.previous;
+            }
+            return (leftmost == null) ? null : leftmost.previous;
+        }
 
         private static <T> int compare(T elem1, T elem2, Comparator<? super T> cmptr) {
             if (elem1 == null || elem2 == null)
@@ -238,10 +266,37 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
             }
         }
         
+        private static <T> void swapReferences(BinomialTree<T> A, BinomialTree<T> B) {
+            BinomialTree<T> tempPrevious = A.previous;
+            BinomialTree<T> tempSibling = A.sibling;
+            BinomialTree<T> tempChild = A.child;
+            
+            if (B.sibling != null) B.sibling.previous = A;
+            A.sibling = B.sibling;
+            if (B.child != null) B.child.previous = A;
+            A.child = B.child;
+            System.out.println(A + " " + A.child);
+            if (B.previous != null && B.previous != A) {
+                if (B.previous.sibling == B) B.previous.sibling = A;
+                else B.previous.child = A;
+            }
+            A.previous = (B.previous == A) ? B : B.previous;
+            
+            if (tempSibling != null) tempSibling.previous = B;
+            B.sibling = tempSibling;
+            if (tempChild != null) tempChild.previous = B;
+            B.child = (tempChild == B) ? A : tempChild;
+            if (tempPrevious != null) {
+                if (tempPrevious.sibling == A) tempPrevious.sibling = B;
+                else tempPrevious.child = B;
+            }
+            B.previous = tempPrevious;
+        }
+        
         @Override
         public String toString() {
-            return value.toString();
             //return value  + " (prev: " + (previous != null ? previous.value : "null") + ")";
+            return value.toString();
         }
     
     }
@@ -254,22 +309,22 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
     public static void main(String[] mains) {
         H_Heap<Integer> H = new H_BinomialHeap<>();
         Random r = new Random();
-        for (int i = 0; i < 10; i++) {
+        System.out.println("insert 50");
+        ElementKey<Integer> key = H.insert(50);
+        for (int i = 0; i < 15; i++) {
             int x = r.nextInt(100);
             System.out.println(H.size() + " -> " + x);
             H.offer(x);
             System.out.println(H);
         }
-        System.out.println("insert 50");
-        ElementKey<Integer> key = H.insert(50);
         System.out.println(H);
-//        System.out.println("decrease key");
-//        H.decreaseKey(key, 22);
-//        System.out.println(H);
+        System.out.println("decrease key");
+        H.decreaseKey(key, 5);
+        System.out.println(H);
         
         while (!H.isEmpty()) {
             System.out.println("Removing -> " + H.poll() + " (" + H.size() + ")");
-//            System.out.println(H);
+            System.out.println(H);
         }
     }
 }
