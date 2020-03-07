@@ -36,6 +36,7 @@ public class H_LeftistHeap<E> implements H_Heap<E> {
     public E deleteMin() {
         if (root == null) throw new IllegalStateException();
         E value = root.value;
+        root.invalidateKey();
         root = LeftistTree.merge(root.left, root.right, comparator);
         if (root != null) root.parent = null;
         size = size - 1;
@@ -62,13 +63,12 @@ public class H_LeftistHeap<E> implements H_Heap<E> {
     public ElementKey<E> decreaseKey(ElementKey<E> key, E value) {
         if (key == null || value == null) 
             throw new NullPointerException();
-        
         if (!(key instanceof LeftistTree)) 
             throw new IllegalArgumentException();
         
         LeftistTree<E> node = (LeftistTree<E>) key;
         
-        if (LeftistTree.compare(node.value, value, comparator) < 0) 
+        if (node.value == null || LeftistTree.compare(node.value, value, comparator) < 0) 
             throw new IllegalArgumentException();
         
         node.value = value;
@@ -138,6 +138,10 @@ public class H_LeftistHeap<E> implements H_Heap<E> {
             return value;
         }
         
+        private void invalidateKey() {
+            this.value = null;
+        }
+        
         private void swapChildren() {
             LeftistTree<E> temp = left;
             left = right;
@@ -188,6 +192,7 @@ public class H_LeftistHeap<E> implements H_Heap<E> {
             return value.toString();
             // return "(" + value.toString() + ", " + distance + ")" + " [parent: " + (parent != null ? parent.value : "null") + "]";
         }
+        
     }
     
         

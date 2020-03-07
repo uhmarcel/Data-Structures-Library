@@ -39,6 +39,7 @@ public class H_PairingHeap<E> implements H_Heap<E> {
         if (root == null) throw new IllegalStateException();
         
         E minimum = root.value;
+        root.invalidateKey();
         root = PairingTree.mergePairs(root.leftmostChild, comparator);
         size = size - 1;
         return minimum;
@@ -68,8 +69,10 @@ public class H_PairingHeap<E> implements H_Heap<E> {
             throw new IllegalArgumentException();
         
         PairingTree<E> node = (PairingTree<E>) key;
-        if (PairingTree.compare(node.value, value, comparator) < 0) 
+        
+        if (node.value == null || PairingTree.compare(node.value, value, comparator) < 0) 
             throw new IllegalArgumentException();
+        
         node.value = value;
         
         PairingTree<E> parent = node.getParent();
@@ -123,6 +126,10 @@ public class H_PairingHeap<E> implements H_Heap<E> {
         @Override
         public E getValue() {
             return value;
+        }
+        
+        private void invalidateKey() {
+            this.value = null;
         }
         
         public static <T> PairingTree<T> merge(PairingTree<T> A, PairingTree<T> B, Comparator<? super T> cmptr) {

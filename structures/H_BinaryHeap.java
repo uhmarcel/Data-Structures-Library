@@ -53,7 +53,7 @@ public class H_BinaryHeap<E> implements H_Heap<E> {
     public E deleteMin() {
         if (size < (heap.length >> 1)) shrink();
         E head = heap[0].value;
-        heap[0].value = null;
+        heap[0].invalidateKey();
         size--;
         swap(0, size);
         percolateDown(0);
@@ -206,6 +206,10 @@ public class H_BinaryHeap<E> implements H_Heap<E> {
         @Override
         public String toString() {
             return value.toString();
+        }
+        
+        private void invalidateKey() {
+            this.value = null;
         }
         
     }
