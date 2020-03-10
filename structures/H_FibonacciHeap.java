@@ -4,11 +4,16 @@ package structures;
 import java.util.Comparator;
 import java.util.Random;
 import structures.interfaces.H_Heap;
-import structures.interfaces.H_Map;
-import structures.interfaces.H_Set;
+import structures.interfaces.H_Set; // For testing, can be removed.
 
 
 public class H_FibonacciHeap<E> implements H_Heap<E> {
+        
+    // find-min:        O(1)
+    // delete-min:      O(logn)
+    // insert:          O(1)
+    // decrease-key:    O(1)
+    // merge:           O(1)
     
     private Comparator<? super E> comparator;
     private FibTree<E> rootList;
@@ -86,16 +91,6 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
         }
         size = size + other.size;
     }
-    
-    private void tempPrintList(FibTree<E> t) {
-        FibTree<E> curr = t;
-        do {
-            System.out.print(t.value + ", ");
-            t = t.next;
-        } while (curr != t);
-        System.out.println();
-        
-    }
 
     @Override
     public ElementKey<E> decreaseKey(ElementKey<E> key, E value) {
@@ -107,23 +102,27 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
         FibTree<E> node = (FibTree<E>) key;
         
         if (node.value == null || compare(node.value, value) < 0) 
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid element key");
+        
         node.value = value;
         
-        if (node.parent != null && compare(node.value, node.parent.value) < 0) {
-            FibTree<E> parent = node.parent;
-            if (node.next != node) 
-                parent.child = node.next;
-            else 
-                parent.child = null;
-            node.unlink();
-            rootList.link(node);
-            node.parent = null;
-            node.marked = false;
+        FibTree<E> current = node;
+        while (current.parent != null && compare(current.value, current.parent.value) < 0) {
+            FibTree<E> parent = current.parent;
+            current.unlink();
+            rootList.link(current);
+            current.parent = null;
+            current.marked = false;
+            
+            if (compare(minimum.value, current.value) > 0) 
+                minimum = current;            
             
             if (parent.marked == true) {
-                node = parent;
-                // ... continue later
+                current = parent;
+            } else {
+                if (parent.parent != null) 
+                    parent.marked = true;
+                break;
             }
         }
         return node;
@@ -132,7 +131,7 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
     private void combinePairs() {
         if (rootList == null) return;
         // Get log2(size) for array length, as java array initialization is O(n)
-        int n = (int) Math.ceil(Math.log(size) / Math.log(2)) + 1; 
+        int n = (int) Math.ceil(Math.log(size) / Math.log(2)) + 2; 
         FibTree<E>[] array = new FibTree[n]; 
         FibTree<E> current = rootList;
         minimum = current;
@@ -196,12 +195,6 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
         return sb.toString();
     }
     
-    public void printTree(FibTree<E> t) {
-        StringBuilder sb = new StringBuilder();
-        print(t, sb, "", "");
-        System.out.println(sb.toString());
-    }
-    
     private void print(FibTree<E> t, StringBuilder sb, String prefix, String childPrefix) {
         if (t == null) return;
         sb.append(prefix).append((t.value == null) ? "" : t).append('\n');
@@ -244,6 +237,9 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
         }
         
         public void unlink() {
+            if (parent != null) {
+                parent.child = (next == this) ? null : next;
+            }
             prev.next = next;
             next.prev = prev;
             next = this;
@@ -273,11 +269,7 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
         
         @Override
         public String toString() {
-            return "(" + value + ", "+ degree + ")\t\t\t (parent: " + p(parent) + ", next: " + p(next) + ", prev: " + p(prev) + ", child: " + p(child) +")";
-        }
-        
-        private static String p(FibTree t) {
-            return (t == null) ? "null" : ((t.value == null) ? "WTF" : t.value.toString());
+            return value.toString();
         }
         
         
@@ -289,49 +281,44 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
     //////////////////////////////////////////////
     
     public static void main(String[] mains) {
-        for (int j = 0; j < 1000; j++) {
-        H_FibonacciHeap<Integer> H = new H_FibonacciHeap<>();
-        Random r = new Random();
-//        System.out.println("insert 50");
-        ElementKey<Integer> key = H.insert(50);
-        for (int i = 0; i < 100; i++) {
-            int x = r.nextInt(100);
-//            System.out.println(H.size() + " -> " + x);
-            H.offer(x);
-//            System.out.println(H);
-        }
-        
-//        H.combinePairs();
-        H.poll();
-//        System.out.println(H);
-        
-        
-//        FibTree<Integer> t = H.rootList;
-//        for (int i = 0; i < 12; i++) {
-//            System.out.print(t.value + ", ");
-//            t = t.prev;
-//        }
-        
-//        System.out.println(H);
-//        System.out.println("decrease key");
-//        H.decreaseKey(key, 5);
-//        System.out.println(H);
-//        
-        while (!H.isEmpty()) {
-            H_Set<Integer> degrees = new H_HashSet<>();
-            FibTree<Integer> curr = H.rootList;
-            do {
-                if (degrees.contains(curr.degree))
-                    throw new IllegalStateException("Repeated degree");
-                degrees.add(curr.degree);
-                curr = curr.next;
-            } while (curr != H.rootList);
-            Integer x = H.poll();
-            if (x == null) throw new NullPointerException();
-//            System.out.println("Removing -> " + x + " (" + H.size() + ")");
+        for (int j = 0; j < 30; j++) {
+            System.out.println("---------------------------------------------");
+            H_FibonacciHeap<Integer> H = new H_FibonacciHeap<>();
+            Random r = new Random();
+            ElementKey<Integer> key = H.insert(90);
+            ElementKey<Integer> key2 = H.insert(91);
+            for (int i = 0; i < 10; i++) {
+                int x = r.nextInt(100);
+                H.offer(x);
+            }
 
+            H.poll();
+
+            System.out.println(H);
+            System.out.println("decrease key");
+            H.decreaseKey(key, 5);
+            H.decreaseKey(key2, 4);
+            System.out.println(H);
+
+            H.poll();
+
+            while (!H.isEmpty()) {
+                H_Set<Integer> degrees = new H_HashSet<>();
+                FibTree<Integer> curr = H.rootList;
+                do {
+                    if (degrees.contains(curr.degree))
+                        throw new IllegalStateException("Repeated degree");
+                    degrees.add(curr.degree);
+                    curr = curr.next;
+                } while (curr != H.rootList);
+                int min = Integer.MAX_VALUE;
+                Integer x = H.poll();
+                if (x == null || x > min) 
+                    throw new NullPointerException("Heap not ordered");
+                min = x;
+            }
         }
-        }
+
     }
 
 }
