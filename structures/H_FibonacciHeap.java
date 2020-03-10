@@ -36,30 +36,29 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
     @Override
     public E deleteMin() {
         if (minimum == null) throw new IllegalStateException();
-//        System.out.println(">>>> Deleting min <<<<");
         E minValue = minimum.value;
         minimum.invalidateKey();
         size = size - 1;
+        
         if (size == 0) {
             rootList = minimum = null;
             return minValue;
         }
+        
         if (minimum == rootList) {
-            if (rootList.next != minimum)
+            if (rootList.next != minimum) {
                 rootList = rootList.next;
-            else   
+            } else {
                 rootList = minimum.child;
+                rootList.parent = null;
+            }
         }
-            
-        if (rootList != minimum.child) rootList.link(minimum.child);
+        
+        if (rootList != minimum.child) 
+            rootList.link(minimum.child);
         minimum.unlink();
-//        System.out.println("works bere");
+        
         combinePairs();
-//        FibTree<E> t = rootList;
-//        for (int i = 0; i < size; i++) {
-//            System.out.println(t);
-//            t = t.next;
-//        }
         return minValue;
     }
 
@@ -100,7 +99,34 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
 
     @Override
     public ElementKey<E> decreaseKey(ElementKey<E> key, E value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (key == null || value == null) 
+            throw new NullPointerException();
+        if (!(key instanceof FibTree)) 
+            throw new IllegalArgumentException();
+        
+        FibTree<E> node = (FibTree<E>) key;
+        
+        if (node.value == null || compare(node.value, value) < 0) 
+            throw new IllegalArgumentException();
+        node.value = value;
+        
+        if (node.parent != null && compare(node.value, node.parent.value) < 0) {
+            FibTree<E> parent = node.parent;
+            if (node.next != node) 
+                parent.child = node.next;
+            else 
+                parent.child = null;
+            node.unlink();
+            rootList.link(node);
+            node.parent = null;
+            node.marked = false;
+            
+            if (parent.marked == true) {
+                node = parent;
+                // ... continue later
+            }
+        }
+        return node;
     }
     
     private void combinePairs() {
@@ -109,7 +135,6 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
         int n = (int) Math.ceil(Math.log(size) / Math.log(2)) + 1; 
         FibTree<E>[] array = new FibTree[n]; 
         FibTree<E> current = rootList;
-        rootList.parent = null;
         minimum = current;
         
         while (current.parent == null && current != array[current.degree]) {
@@ -264,12 +289,12 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
     //////////////////////////////////////////////
     
     public static void main(String[] mains) {
-        for (int j = 0; j < 30; j++) {
+        for (int j = 0; j < 1000; j++) {
         H_FibonacciHeap<Integer> H = new H_FibonacciHeap<>();
         Random r = new Random();
-        System.out.println("insert 50");
+//        System.out.println("insert 50");
         ElementKey<Integer> key = H.insert(50);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             int x = r.nextInt(100);
 //            System.out.println(H.size() + " -> " + x);
             H.offer(x);
@@ -278,7 +303,7 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
         
 //        H.combinePairs();
         H.poll();
-        System.out.println(H);
+//        System.out.println(H);
         
         
 //        FibTree<Integer> t = H.rootList;
@@ -303,7 +328,7 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
             } while (curr != H.rootList);
             Integer x = H.poll();
             if (x == null) throw new NullPointerException();
-            System.out.println("Removing -> " + x + " (" + H.size() + ")");
+//            System.out.println("Removing -> " + x + " (" + H.size() + ")");
 
         }
         }
