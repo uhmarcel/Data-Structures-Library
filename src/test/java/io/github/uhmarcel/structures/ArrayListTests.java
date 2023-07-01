@@ -4,9 +4,7 @@ import io.github.uhmarcel.AbstractCollectionTests;
 import io.github.uhmarcel.AbstractListTests;
 import io.github.uhmarcel.H_Collection;
 import io.github.uhmarcel.H_List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 
 @Nested
 public class ArrayListTests {

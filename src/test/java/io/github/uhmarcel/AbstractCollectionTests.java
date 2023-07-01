@@ -12,6 +12,53 @@ public abstract class AbstractCollectionTests {
     public abstract <T> H_Collection<T> getCollection();
 
     @Test
+    public void givenCollection_whenAddingElements_expectElementsAdded() {
+        H_Collection<Character> c = getCollection();
+
+        Assertions.assertArrayEquals(new Character[] {}, c.toArray());
+
+        c.add('a');
+        c.add('b');
+        c.add('c');
+
+        Assertions.assertArrayEquals(new Character[] { 'a', 'b', 'c' }, c.toArray());
+    }
+
+    @Test
+    public void givenCollection_whenRemovingElements_expectElementsRemoved() {
+        H_Collection<Character> c = getCollection();
+        c.add('a');
+        c.add('b');
+        c.add('c');
+        c.add('d');
+
+        Assertions.assertArrayEquals(new Character[] { 'a', 'b', 'c', 'd' }, c.toArray());
+
+        c.remove('b');
+        c.remove('d');
+
+        Assertions.assertArrayEquals(new Character[] { 'a', 'c' }, c.toArray());
+    }
+
+    @Test
+    public void givenCollectionIncludingElement_whenCallingContains_expectTrue() {
+        H_Collection<Character> c = getCollection();
+        c.add('b');
+        c.add('c');
+
+        Assertions.assertTrue(c.contains('b'));
+    }
+
+    @Test
+    public void givenCollectionNotIncludingElement_whenCallingContains_expectFalse() {
+        H_Collection<Character> c = getCollection();
+        c.add('a');
+        c.add('c');
+
+        Assertions.assertFalse(c.contains('b'));
+    }
+
+    @Test
     public void givenCollectionWithVariousSizes_whenCallingSize_expectProperSize() {
         H_Collection<Integer> c = getCollection();
 
@@ -58,53 +105,6 @@ public abstract class AbstractCollectionTests {
         Integer[] expected = new Integer[] { 0, 1, 7, -9, 9, 1 };
 
         Assertions.assertArrayEquals(expected, c.toArray());
-    }
-
-    @Test
-    public void givenCollection_whenAddingElements_expectElementsAdded() {
-        H_Collection<Character> c = getCollection();
-
-        Assertions.assertArrayEquals(new Character[] {}, c.toArray());
-
-        c.add('a');
-        c.add('b');
-        c.add('c');
-
-        Assertions.assertArrayEquals(new Character[] { 'a', 'b', 'c' }, c.toArray());
-    }
-
-    @Test
-    public void givenCollection_whenRemovingElements_expectElementsRemoved() {
-        H_Collection<Character> c = getCollection();
-        c.add('a');
-        c.add('b');
-        c.add('c');
-        c.add('d');
-
-        Assertions.assertArrayEquals(new Character[] { 'a', 'b', 'c', 'd' }, c.toArray());
-
-        c.remove('b');
-        c.remove('d');
-
-        Assertions.assertArrayEquals(new Character[] { 'a', 'c' }, c.toArray());
-    }
-
-    @Test
-    public void givenCollectionIncludingElement_whenCallingContains_expectTrue() {
-        H_Collection<Character> c = getCollection();
-        c.add('b');
-        c.add('c');
-
-        Assertions.assertTrue(c.contains('b'));
-    }
-
-    @Test
-    public void givenCollectionNotIncludingElement_whenCallingContains_expectFalse() {
-        H_Collection<Character> c = getCollection();
-        c.add('a');
-        c.add('c');
-
-        Assertions.assertFalse(c.contains('b'));
     }
 
     @Test

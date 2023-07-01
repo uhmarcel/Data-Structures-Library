@@ -48,10 +48,17 @@ public class H_ArrayList<E> implements H_List<E> {
     }
 
     public E get(int i) {
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         return (E) this.array[i];
     }
 
     public E set(int i, E e) {
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         E prev = (E) array[i];
         array[i] = e;
         return prev;
@@ -59,20 +66,28 @@ public class H_ArrayList<E> implements H_List<E> {
 
     public void add(int i, E e) {
         if (size == array.length) grow();
+
         for (int j = size - 1; j >= i; j--) {
             array[j + 1] = array[j];
         }
+
         array[i] = e; 
         size++;
     }
 
     public E remove(int i) {
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         if (size < (array.length >> 1)) shrink();
         E removed = (E) array[i];
+
         for (int j = i; j < size - 1; j++) {
             array[j] = array[j + 1];
         }
         size--;
+
         return removed;
     }
 
@@ -105,9 +120,11 @@ public class H_ArrayList<E> implements H_List<E> {
         if (array.length > Integer.MAX_VALUE / 2) return;
         int doubleCapacity = array.length << 1;
         Object[] doubleArray = new Object[doubleCapacity];
-        for (int i = 0; i < size; i++) {
-            doubleArray[i] = array[i];
+
+        if (size >= 0) {
+            System.arraycopy(array, 0, doubleArray, 0, size);
         }
+
         this.array = doubleArray;
     }
     
@@ -115,9 +132,11 @@ public class H_ArrayList<E> implements H_List<E> {
         if (array.length <= DEFAULT_SIZE) return;
         int halfCapacity = array.length >> 1;
         Object[] halfArray = new Object[halfCapacity];
-        for (int i = 0; i < size; i++) {
-            halfArray[i] = array[i];
+
+        if (size >= 0) {
+            System.arraycopy(array, 0, halfArray, 0, size);
         }
+
         this.array = halfArray;
     }
     

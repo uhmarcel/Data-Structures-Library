@@ -80,25 +80,38 @@ public class H_LinkedList<E> implements H_List<E>, H_Queue<E>, H_Stack<E>, H_Deq
     
     @Override
     public void add(int i, E e) {
-        if (i < 0 || i >= size) return;
-        getNode(i).insertBefore(e);
+        if (i < 0 || i > size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        if (i == size) {
+            addLast(e);
+        } else {
+            getNode(i).insertBefore(e);
+        }
     }
 
     @Override
     public E remove(int i) {
-        if (i < 0 || i >= size) return null;
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         return getNode(i).remove();
     }
     
     @Override
     public E get(int i) {
-        if (i < 0 || i >= size) return null;
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         return getNode(i).value;
     }
 
     @Override
     public E set(int i, E e) {
-        if (i < 0 || i >= size) return null;
+        if (i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         return getNode(i).set(e);
     }
     

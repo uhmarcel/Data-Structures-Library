@@ -1,12 +1,7 @@
 package io.github.uhmarcel.structures;
 
-import io.github.uhmarcel.AbstractCollectionTests;
-import io.github.uhmarcel.AbstractListTests;
-import io.github.uhmarcel.H_Collection;
-import io.github.uhmarcel.H_List;
-import org.junit.jupiter.api.Assertions;
+import io.github.uhmarcel.*;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 
 @Nested
 public class LinkedListTests {
@@ -27,5 +22,28 @@ public class LinkedListTests {
         }
     }
 
+    @Nested
+    class QueueTests extends AbstractQueueTests {
+        @Override
+        public <T> H_Queue<T> getQueue() {
+            return new H_LinkedList<>();
+        }
+    }
+
+    @Nested
+    class StackTests extends AbstractStackTests {
+        @Override
+        public <T> H_Stack<T> getStack() {
+            return new H_LinkedList<>();
+        }
+    }
+
+    @Nested
+    class DequeTests extends AbstractDequeTests {
+        @Override
+        public <T> H_Deque<T> getDeque() {
+            return new H_LinkedList<>();
+        }
+    }
 
 }
