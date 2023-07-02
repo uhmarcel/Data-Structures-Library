@@ -39,7 +39,7 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
 
     @Override
     public E deleteMin() {
-        if (minimum == null) throw new IllegalStateException();
+        if (minimum == null) return null;
         E minValue = minimum.value;
         minimum.invalidateKey();
         size = size - 1;
@@ -68,13 +68,13 @@ public class H_FibonacciHeap<E> implements H_Heap<E> {
 
     @Override
     public E findMin() {
-        if (minimum == null) throw new IllegalStateException();
+        if (minimum == null) return null;
         return minimum.value;
     }
 
     @Override
     public void merge(H_Heap<E> heap) {
-        if (heap == null || !(heap instanceof H_FibonacciHeap)) 
+        if (!(heap instanceof H_FibonacciHeap))
             throw new IllegalArgumentException();
         
         H_FibonacciHeap<E> other = (H_FibonacciHeap<E>) heap; 

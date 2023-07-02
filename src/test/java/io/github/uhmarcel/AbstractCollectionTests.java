@@ -1,10 +1,11 @@
 package io.github.uhmarcel;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
-
+import org.junit.jupiter.api.Test;
 import java.util.Iterator;
+
+import static io.github.uhmarcel.TestUtils.expectCollectionContents;
 
 @Nested
 public abstract class AbstractCollectionTests {
@@ -15,13 +16,13 @@ public abstract class AbstractCollectionTests {
     public void givenCollection_whenAddingElements_expectElementsAdded() {
         H_Collection<Character> c = getCollection();
 
-        Assertions.assertArrayEquals(new Character[] {}, c.toArray());
+        expectCollectionContents(new Character[] {}, c);
 
         c.add('a');
         c.add('b');
         c.add('c');
 
-        Assertions.assertArrayEquals(new Character[] { 'a', 'b', 'c' }, c.toArray());
+        expectCollectionContents(new Character[] { 'a', 'b', 'c' }, c);
     }
 
     @Test
@@ -30,14 +31,13 @@ public abstract class AbstractCollectionTests {
         c.add('a');
         c.add('b');
         c.add('c');
-        c.add('d');
 
-        Assertions.assertArrayEquals(new Character[] { 'a', 'b', 'c', 'd' }, c.toArray());
+        expectCollectionContents(new Character[] { 'a', 'b', 'c' }, c);
 
-        c.remove('b');
-        c.remove('d');
+        c.remove('a');
+        c.remove('c');
 
-        Assertions.assertArrayEquals(new Character[] { 'a', 'c' }, c.toArray());
+        expectCollectionContents(new Character[] { 'b' }, c);
     }
 
     @Test
@@ -95,16 +95,17 @@ public abstract class AbstractCollectionTests {
     @Test
     public void givenCollection_whenCallingToArray_expectCorrectArray() {
         H_Collection<Integer> c = getCollection();
+
         c.add(0);
         c.add(1);
         c.add(7);
         c.add(-9);
         c.add(9);
-        c.add(1);
+        c.add(2);
 
-        Integer[] expected = new Integer[] { 0, 1, 7, -9, 9, 1 };
+        Integer[] expected = new Integer[] { 0, 1, 7, -9, 9, 2 };
 
-        Assertions.assertArrayEquals(expected, c.toArray());
+        expectCollectionContents(expected, c);
     }
 
     @Test
@@ -113,12 +114,12 @@ public abstract class AbstractCollectionTests {
         c.add("one");
         c.add("two");
 
-        Assertions.assertArrayEquals(new String[] { "one", "two" }, c.toArray());
+        expectCollectionContents(new String[] { "one", "two" }, c);
         Assertions.assertFalse(c.isEmpty());
 
         c.clear();
 
-        Assertions.assertArrayEquals(new String[] {}, c.toArray());
+        expectCollectionContents(new String[] {}, c);
         Assertions.assertTrue(c.isEmpty());
     }
 
@@ -130,7 +131,7 @@ public abstract class AbstractCollectionTests {
         c.add(2);
         c.add(3);
 
-        Assertions.assertArrayEquals(new Integer[] { 1, 2, 3 }, c.toArray());
+        expectCollectionContents(new Integer[] { 1, 2, 3 }, c);
 
         Iterator<Integer> iter = c.iterator();
 
@@ -142,7 +143,7 @@ public abstract class AbstractCollectionTests {
         Assertions.assertEquals(3, iter.next());
         Assertions.assertFalse(iter.hasNext());
 
-        Assertions.assertArrayEquals(new Integer[] { 1, 2, 3 }, c.toArray(), "Expect no changes");
+        expectCollectionContents(new Integer[] { 1, 2, 3 }, c); // Expect no changes
     }
 
 }

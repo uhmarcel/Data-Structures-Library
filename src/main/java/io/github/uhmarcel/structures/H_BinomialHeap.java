@@ -25,7 +25,9 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
     
     @Override
     public ElementKey<E> insert(E element) {
-        if (element == null) throw new NullPointerException();
+        if (element == null) {
+            throw new NullPointerException();
+        }
         BinomialTree<E> node = new BinomialTree<>(element);
         size = size + 1;
         merge(node);
@@ -34,7 +36,9 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
     
     @Override
     public E deleteMin() {
-        if (minRoot == null) throw new IllegalStateException();
+        if (minRoot == null) {
+            return null;
+        }
         E minimum = minRoot.value;
         
         if (minRoot == rootNodes) // To avoid unlinking the root
@@ -48,7 +52,7 @@ public class H_BinomialHeap<E> implements H_Heap<E> {
 
     @Override
     public E findMin() {
-        if (rootNodes == null) throw new IllegalStateException();
+        if (rootNodes == null) return null;
         return minRoot.value;
     }
 

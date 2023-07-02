@@ -51,6 +51,8 @@ public class H_BinaryHeap<E> implements H_Heap<E> {
 
     @Override
     public E deleteMin() {
+        if (size == 0) return null;
+
         if (size < (heap.length >> 1)) shrink();
         E head = heap[0].value;
         heap[0].invalidateKey();
@@ -62,14 +64,16 @@ public class H_BinaryHeap<E> implements H_Heap<E> {
 
     @Override
     public E findMin() {
+        if (size == 0) return null;
         return heap[0].value;
     }
 
     @Override 
     public void merge(H_Heap<E> heap) {
-        if (heap == null || !(heap instanceof H_BinaryHeap))
+        if (!(heap instanceof H_BinaryHeap)) {
             throw new IllegalArgumentException();
-        
+        }
+
         H_BinaryHeap<E> other = (H_BinaryHeap<E>) heap;
         Element<E>[] elements = new Element[size + other.size];
         System.arraycopy(this.heap, 0, elements, 0, size);
@@ -85,20 +89,24 @@ public class H_BinaryHeap<E> implements H_Heap<E> {
 
     @Override
     public ElementKey<E> decreaseKey(ElementKey<E> key, E value) {
-        if (key == null || value == null) 
+        if (key == null || value == null) {
             throw new NullPointerException();
-        if (!(key instanceof Element)) 
+        }
+        if (!(key instanceof Element)) {
             throw new IllegalArgumentException("Invalid key");
+        }
         
         Element<E> node = (Element<E>) key;
-        if (node.value == null) 
+        if (node.value == null) {
             throw new IllegalStateException("Element is no longer in the heap");
-        if (compare(heap[node.index].value, value) < 0) 
+        }
+        if (compare(heap[node.index].value, value) < 0) {
             throw new IllegalArgumentException("New value is larger than previous value");
-        
-        
+        }
+
         heap[node.index].value = value;
         percolateUp(node.index);
+
         return node;
     }
     

@@ -6,7 +6,7 @@ import io.github.uhmarcel.H_Collection;
 import io.github.uhmarcel.H_List;
 
 
-public class H_HashMap<K,V> implements H_Map<K,V> {
+public class H_HashMap<K, V> implements H_Map<K, V> {
     
     private static final int DEFAULT_SIZE = 16;
     private H_List<MapEntry>[] map; 

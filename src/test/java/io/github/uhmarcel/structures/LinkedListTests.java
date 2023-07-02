@@ -3,16 +3,8 @@ package io.github.uhmarcel.structures;
 import io.github.uhmarcel.*;
 import org.junit.jupiter.api.Nested;
 
-@Nested
-public class LinkedListTests {
 
-    @Nested
-    class CollectionTests extends AbstractCollectionTests {
-        @Override
-        public <T> H_Collection<T> getCollection() {
-            return new H_LinkedList<>();
-        }
-    }
+public class LinkedListTests {
 
     @Nested
     class ListTests extends AbstractListTests {

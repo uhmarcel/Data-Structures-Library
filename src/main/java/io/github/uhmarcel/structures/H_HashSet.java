@@ -22,7 +22,7 @@ public class H_HashSet<E> implements H_Set<E> {
     public boolean add(E e) {
         if (this.contains(e)) return false;
         if (loadFactor() > 0.75) grow();
-        int index = e.hashCode() % array.length;
+        int index = Math.abs(e.hashCode()) % array.length;
         if (!array[index].remove(e)) size++; 
         array[index].add(e);
         return true;
@@ -32,7 +32,7 @@ public class H_HashSet<E> implements H_Set<E> {
     public boolean remove(Object o) {
         if (!this.contains(o)) return false;
         if (loadFactor() < 0.25) shrink();
-        int index = o.hashCode() % array.length;
+        int index = Math.abs(o.hashCode()) % array.length;
         array[index].remove(o);
         size--;
         return true;
@@ -40,7 +40,7 @@ public class H_HashSet<E> implements H_Set<E> {
 
     @Override
     public boolean contains(Object o) {
-        int index = o.hashCode() % array.length;
+        int index = Math.abs(o.hashCode()) % array.length;
         return array[index].contains(o);
     }
 

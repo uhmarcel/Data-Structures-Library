@@ -33,7 +33,7 @@ public class H_LeftistHeap<E> implements H_Heap<E> {
 
     @Override
     public E deleteMin() {
-        if (root == null) throw new IllegalStateException();
+        if (root == null) return null;
         E value = root.value;
         root.invalidateKey();
         root = LeftistTree.merge(root.left, root.right, comparator);
@@ -44,7 +44,7 @@ public class H_LeftistHeap<E> implements H_Heap<E> {
 
     @Override
     public E findMin() {
-        if (root == null) throw new IllegalStateException();
+        if (root == null) return null;
         return root.value;
     }
 

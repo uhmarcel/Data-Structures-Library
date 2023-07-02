@@ -1,11 +1,20 @@
 package io.github.uhmarcel;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public abstract class AbstractListTests {
 
     public abstract <T> H_List<T> getList();
+
+    @Nested
+    class CollectionTests extends AbstractCollectionTests {
+        @Override
+        public <T> H_Collection<T> getCollection() {
+            return getList();
+        }
+    }
 
     @Test
     public void whenGetAtValidIndex_expectItemReturned() {
@@ -180,4 +189,17 @@ public abstract class AbstractListTests {
         Assertions.assertEquals(-1, l.indexOf("target"));
     }
 
+    @Test
+    public void whenAddingDuplicateElements_expectElementsAddedAndSizeIncreased() {
+        H_List<Integer> l = getList();
+
+        l.add(0);
+        l.add(0);
+        l.add(0);
+
+        Assertions.assertEquals(3, l.size());
+        Assertions.assertEquals(0, l.get(0));
+        Assertions.assertEquals(0, l.get(1));
+        Assertions.assertEquals(0, l.get(2));
+    }
 }
