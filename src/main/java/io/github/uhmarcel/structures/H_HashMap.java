@@ -23,7 +23,7 @@ public class H_HashMap<K, V> implements H_Map<K, V> {
     @Override
     public V get(Object o) {
         K key = (K) o;
-        int index = key.hashCode() % map.length;
+        int index = Math.abs(key.hashCode()) % map.length;
         return findValue(index, key);
     }
 
@@ -31,7 +31,7 @@ public class H_HashMap<K, V> implements H_Map<K, V> {
     public V put(K key, V value) {
         if (loadFactor() > 0.75) grow();
         V prev = remove(key);
-        int index = key.hashCode() % map.length;
+        int index = Math.abs(key.hashCode()) % map.length;
         map[index].add(new MapEntry(key, value));
         size++;
         return prev;
@@ -40,7 +40,7 @@ public class H_HashMap<K, V> implements H_Map<K, V> {
     @Override
     public V remove(Object o) {
         K key = (K) o;
-        int index = key.hashCode() % map.length;
+        int index = Math.abs(key.hashCode()) % map.length;
         V removed = findValue(index, key);
         if (removed != null) {
             map[index].remove(new MapEntry(key, null));
@@ -53,7 +53,7 @@ public class H_HashMap<K, V> implements H_Map<K, V> {
     @Override
     public boolean containsKey(Object o) {
         K key = (K) o;
-        int index = key.hashCode() % map.length;
+        int index = Math.abs(key.hashCode()) % map.length;
         MapEntry entry = new MapEntry(key, null);
         return map[index].contains(entry);
     }

@@ -17,6 +17,7 @@ public class H_LinkedHashMap<K, V> implements H_Map<K, V> {
     
     @Override
     public V get(Object key) {
+        if (!map.containsKey(key)) return null;
         return map.get(key).value().getValue();
     }
 

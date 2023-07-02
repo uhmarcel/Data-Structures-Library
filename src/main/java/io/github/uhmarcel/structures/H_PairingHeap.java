@@ -35,7 +35,7 @@ public class H_PairingHeap<E> implements H_Heap<E> {
 
     @Override
     public E deleteMin() {
-        if (root == null) throw new IllegalStateException();
+        if (root == null) return null;
         
         E minimum = root.value;
         root.invalidateKey();
@@ -46,7 +46,7 @@ public class H_PairingHeap<E> implements H_Heap<E> {
 
     @Override
     public E findMin() {
-        if (root == null) throw new IllegalStateException();
+        if (root == null) return null;
         return root.value;
     }
 

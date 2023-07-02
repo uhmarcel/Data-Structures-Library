@@ -18,10 +18,10 @@ public class H_HashMultiSet<E> implements H_MultiSet<E> {
     }
     
     @Override
-    public int add(E object, int ocurrences) {
-        if (ocurrences < 0) throw new IllegalArgumentException();
+    public int add(E object, int occurrences) {
+        if (occurrences < 0) throw new IllegalArgumentException();
         int prev = (map.containsKey(object)) ? map.get(object) : 0;
-        map.put(object, prev + ocurrences);
+        map.put(object, prev + occurrences);
         return prev;
     }
     
@@ -37,14 +37,14 @@ public class H_HashMultiSet<E> implements H_MultiSet<E> {
     }
 
     @Override
-    public int remove(Object object, int ocurrences) {
-        if (ocurrences < 0) throw new IllegalArgumentException();
+    public int remove(Object object, int occurrences) {
+        if (occurrences < 0) throw new IllegalArgumentException();
         if (!map.containsKey(object)) return 0;
         int prev = map.get(object);
-        if (prev <= ocurrences)
+        if (prev <= occurrences)
             map.remove(object);
         else
-            map.put((E) object, prev - ocurrences);
+            map.put((E) object, prev - occurrences);
         return prev;
     }
 
@@ -54,10 +54,10 @@ public class H_HashMultiSet<E> implements H_MultiSet<E> {
     }
 
     @Override
-    public int setCount(E object, int ocurrences) {
-        if (ocurrences < 0) throw new IllegalArgumentException();
-        if (ocurrences == 0) return map.remove(object);
-        return map.put(object, ocurrences);
+    public int setCount(E object, int occurrences) {
+        if (occurrences < 0) throw new IllegalArgumentException();
+        if (occurrences == 0) return map.remove(object);
+        return map.put(object, occurrences);
     }
 
     @Override
